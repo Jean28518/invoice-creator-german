@@ -39,6 +39,7 @@ def get_all_lines_from_file(file_path):
         return f.readlines()
     
 def main():
+    print("Generating invoice...")
     # Create the parser
     parser = argparse.ArgumentParser(description='German invoice generator.')
 
@@ -116,26 +117,28 @@ def main():
     # \Fee{Musterdienstleistung 1}{30.00}{4}
     lines = ["\ProjectTitle{Projekttitel}\n"]
     articles = args.article
-    for article in articles:
-        # Parse the article
-        segments = article.split(";")
-        if len(segments) != 3:
-            print(f'Error: Wrong format for article: "{article}". Use: --article "<description>;<pricePerUnit>;<amount>" "<description>;<pricePerUnit>;<amount>"')
-            sys.exit(1)
-        # Save to ../latex/_invoice.tex
-        lines.append("\\Fee{" + segments[0] + "}{" + segments[1] + "}{" + segments[2] + "}\n")
+    if articles != None:
+        for article in articles:
+            # Parse the article
+            segments = article.split(";")
+            if len(segments) != 3:
+                print(f'Error: Wrong format for article: "{article}". Use: --article "<description>;<pricePerUnit>;<amount>" "<description>;<pricePerUnit>;<amount>"')
+                sys.exit(1)
+            # Save to ../latex/_invoice.tex
+            lines.append("\\Fee{" + segments[0] + "}{" + segments[1] + "}{" + segments[2] + "}\n")
 
     ## EXPENSES
     expenses = args.expense
     # \EBCi{Hotel, 12 Nächte} {2400.00}
-    for expense in expenses:
-        # Parse the expense
-        segments = expense.split(";")
-        if len(segments) != 2:
-            print(f'Error: Wrong format for expense: "{expense}". Use: --expense "<description>;<price>" "<description>;<price>"')
-            sys.exit(1)
-        # Save to ../latex/_invoice.tex
-        lines.append("\\EBCi{" + segments[0] + "}{" + segments[1] + "}\n")
+    if expenses != None:
+        for expense in expenses:
+            # Parse the expense
+            segments = expense.split(";")
+            if len(segments) != 2:
+                print(f'Error: Wrong format for expense: "{expense}". Use: --expense "<description>;<price>" "<description>;<price>"')
+                sys.exit(1)
+            # Save to ../latex/_invoice.tex
+            lines.append("\\EBCi{" + segments[0] + "}{" + segments[1] + "}\n")
 
     ## DISCOUNT
     discount = args.discount
@@ -176,14 +179,15 @@ def main():
         f.writelines(binary)
         f.close()
     
+    print("SUCCESS")
 
-    # Change workind to ../latex/_main.tex
-    os.chdir("../latex/")
+    # # Change workind to ../latex/_main.tex
+    # os.chdir("../latex/")
 
-    # Run command: pdflatex -output-directory=../  _main.tex
-    os.system("pdflatex -output-directory=../  _main.tex")
-    # Move the _main.pdf to invoices/currentyear/currentmonth/YYY-MM-<number>.pdf
-    os.rename("../_main.pdf", "../python/invoices/" + current_year + "/" + current_month + "/Rechnung-" + invoice_number + ".pdf")
+    # # Run command: pdflatex -output-directory=../  _main.tex
+    # os.system("pdflatex -output-directory=../  _main.tex")
+    # # Move the _main.pdf to invoices/currentyear/currentmonth/YYY-MM-<number>.pdf
+    # os.rename("../_main.pdf", "../python/invoices/" + current_year + "/" + current_month + "/Rechnung-" + invoice_number + ".pdf")
     pass
 
 if __name__ == "__main__":
