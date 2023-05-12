@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:invoice/datatypes/invoice_element.dart';
+import 'package:invoice/services/config_service.dart';
 
 class InvoiceService {
   static List<InvoiceElement> invoiceElements = [
@@ -86,7 +87,7 @@ class InvoiceService {
     // Add articles
     var articles = invoiceElements
         .where((element) => element.type == InvoiceElementType.article);
-    if (articles.length > 0) {
+    if (articles.isNotEmpty) {
       arguments.add("--article");
       for (var element in articles) {
         String s = "${element.name};${element.pricePerUnit};${element.amount}";
@@ -94,7 +95,34 @@ class InvoiceService {
       }
     }
 
-    print(arguments);
+    // Add expenses
+    var expenses = invoiceElements
+        .where((element) => element.type == InvoiceElementType.expense);
+    if (expenses.isNotEmpty) {
+      arguments.add("--expense");
+      for (var element in expenses) {
+        String s = "${element.name};${element.pricePerUnit}";
+        arguments.add(s);
+      }
+    }
+
+    // Add discount
+    var discount = invoiceElements
+        .where((element) => element.type == InvoiceElementType.discount);
+    if (discount.isNotEmpty) {
+      arguments.add("--discount");
+      for (var element in discount) {
+        String s = "${element.name};${element.pricePerUnit}";
+        arguments.add(s);
+      }
+    }
+
+    // Add logo
+    String logoPath = ConfigHandler.getValueUnsafe("logoPath", "");
+    if (logoPath != "") {
+      arguments.add("--logo");
+      arguments.add(logoPath);
+    }
 
     var result = await Process.run("/usr/bin/python3", arguments,
         workingDirectory: pythonWorkingDir.path);

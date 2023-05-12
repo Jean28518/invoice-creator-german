@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:invoice/datatypes/invoice_element.dart';
+import 'package:invoice/pages/template_settings/template_settings.dart';
 import 'package:invoice/services/helpers.dart';
 import 'package:invoice/services/invoice_service.dart';
 import 'package:invoice/widgets/mint_y.dart';
@@ -72,8 +73,13 @@ class InvoiceCreationPage extends StatelessWidget {
           ),
           Row(
             children: [
-              SizedBox(
-                width: 200,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: MintYButtonNavigate(
+                    route: TemplateSettingsPage(),
+                    text: const Text("Vorlagen-Einstellungen",
+                        style: MintY.heading4White),
+                    color: MintY.currentColor),
               )
             ],
           ),
@@ -168,11 +174,24 @@ class InvoiceElementCreationWidget extends StatelessWidget {
                 color: MintY.currentColor,
               ),
             ),
-            MintYTextLine(
+            MintYTextField(
               hintText: "Artikelname",
               width: 500,
             ),
-            MintYTextLine(
+            // Expanded(
+            //   child: Container(
+            //     height: 50,
+            //     child: TextField(
+            //       decoration: InputDecoration(
+            //           fillColor: Theme.of(context).canvasColor,
+            //           filled: true,
+            //           hintText: "Artikelname Test"),
+            //       style: Theme.of(context).textTheme.bodySmall,
+            //       cursorColor: MintY.currentColor,
+            //     ),
+            //   ),
+            // ),
+            MintYTextField(
               hintText: "Menge",
               width: 100,
             ),
@@ -220,7 +239,7 @@ class DiscountCreationWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Rabattbeschreibung",
           width: 400,
           onChanged: (value) {
@@ -228,7 +247,7 @@ class DiscountCreationWidget extends StatelessWidget {
           },
           controller: discountNameController,
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Preisnachlass in €",
           width: 200,
           onChanged: (value) {
@@ -297,7 +316,7 @@ class ExpenseCreationWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Aufwendungsbeschreibung",
           width: 500,
           onChanged: (p0) => {
@@ -305,7 +324,7 @@ class ExpenseCreationWidget extends StatelessWidget {
           },
           controller: expenseNameController,
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Preis",
           width: 100,
           onChanged: (p0) => {
@@ -377,7 +396,7 @@ class CustomArticleCreationWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Artikelbeschreibung",
           width: 300,
           onChanged: (p0) {
@@ -385,7 +404,7 @@ class CustomArticleCreationWidget extends StatelessWidget {
           },
           controller: articleNameController,
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Preis pro Einheit",
           width: 200,
           onChanged: (p0) {
@@ -393,7 +412,7 @@ class CustomArticleCreationWidget extends StatelessWidget {
           },
           controller: articlePricePerUnitController,
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Menge",
           width: 100,
           onChanged: (p0) {
@@ -447,19 +466,19 @@ class AdressWidget extends StatelessWidget {
     return Column(
       // mainAxisSize: MainAxisSize.max,
       children: [
-        MintYTextLine(
+        MintYTextField(
           hintText: "Firma",
           onChanged: (p0) {
             InvoiceService.currentCompanyName = p0;
           },
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Ansprechpartner",
           onChanged: (p0) {
             InvoiceService.currentContactPerson = p0;
           },
         ),
-        MintYTextLine(
+        MintYTextField(
           hintText: "Straße, Hausnummer",
           onChanged: (p0) {
             InvoiceService.currentCustomerStreet = p0;
@@ -467,14 +486,14 @@ class AdressWidget extends StatelessWidget {
         ),
         Row(
           children: [
-            MintYTextLine(
+            MintYTextField(
               hintText: "PLZ",
               width: 80,
               onChanged: (p0) {
                 InvoiceService.currentCustomerZip = p0;
               },
             ),
-            MintYTextLine(
+            MintYTextField(
               hintText: "Ort",
               width: 220,
               onChanged: (p0) {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 /// If unparsable returns 0.0
 double parseDouble(String s) {
   // Check if double
@@ -8,4 +10,21 @@ double parseDouble(String s) {
     return double.parse(s);
   }
   return 0.0;
+}
+
+String getHomeDirectory() {
+  String? home = Platform.environment["HOME"];
+  if (home != null) {
+    if (!home.endsWith("/")) {
+      home += "/";
+    }
+    return home;
+  } else {
+    return "";
+  }
+}
+
+String getConfigDirectory() {
+  String homeDir = getHomeDirectory();
+  return "$homeDir.config/german-invoice-generator/";
 }

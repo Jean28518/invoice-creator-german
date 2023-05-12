@@ -906,27 +906,33 @@ class MintYLoadingPage extends StatelessWidget {
   }
 }
 
-class MintYTextLine extends StatelessWidget {
+class MintYTextField extends StatelessWidget {
   double height;
   double width;
   String hintText;
   StringCallback? onChanged;
   TextEditingController? controller;
-  MintYTextLine(
+
+  /// If maxLines is 1, its a normal textfield, if its more, its a text area
+  int maxLines;
+
+  MintYTextField(
       {super.key,
       this.height = 50,
       this.width = 300,
       this.hintText = "",
       this.onChanged,
-      this.controller});
+      this.controller,
+      this.maxLines = 1});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(4.0),
-      height: height,
+      padding: const EdgeInsets.all(4.0),
+      height: (18 * maxLines) + height - 18,
       width: width,
       child: TextField(
+        maxLines: maxLines,
         controller: controller,
         decoration: InputDecoration(
             fillColor: Theme.of(context).canvasColor,
