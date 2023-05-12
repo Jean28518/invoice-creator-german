@@ -1,0 +1,8 @@
+Package: rechnungs-assistent
+Version: 0.1.0
+Depends: 
+Maintainer: Jean28518
+Architecture: amd64
+Hompage: https://www.linuxguides.de/
+Section: Office
+Description: Create invoices according to German standard

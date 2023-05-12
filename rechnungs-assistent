@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cd /usr/lib/rechnungs-assistent
+
+# Check if any arguments were passed
+if [ $# -eq 0 ]; then
+    echo "Starting frontend..."
+    python3 runner.py &
+    ./invoice
+    exit 0
+fi
+
+# Start generator with arguments
+echo "Starting generator..."
+python3 generator.py "$@"
