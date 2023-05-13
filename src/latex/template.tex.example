@@ -1,10 +1,7 @@
-\newcommand{\invoiceSalutation}{Sehr geehrte Damen und Herren,} % die Anrede
-\newcommand{\invoiceText}{für die von mir erbrachte Leistung erhalten Sie
-hiermit die Rechnung. Bitte zahlen Sie den unten aufgeführten Gesamtbetrag
-unter Angabe der Rechnungsnummer (\invoiceReference) bis
-zum \payDate \ auf das angegebene Konto ein.} % Rechnungstext
+\newcommand{\invoiceSalutation}{Sehr geehrte Damen und Herren,}
+\newcommand{\invoiceText}{für die von mir erbrachte Leistung erhalten Sie hiermit die Rechnung. Bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\invoiceReference) bis zum \payDate \ auf das angegebene Konto ein.}
 \newcommand{\invoiceHint}{Im ausgewiesenen Betrag ist gemäß § 19 UStG keine Umsatzsteuer enthalten.}
-\newcommand{\invoiceEnclosures}{} % \encl{} einfügen
+\newcommand{\invoiceEnclosures}{}
 \newcommand{\invoiceClosing}{Mit freundlichen Grüßen}
 
 
@@ -12,7 +9,7 @@ zum \payDate \ auf das angegebene Konto ein.} % Rechnungstext
 
 % ################## Personal DATA ##################
 % START INVOICE DATA
-%\newcommand{\taxID}{#!DEACTIVATED!#}
+\newcommand{\taxID}{1234 123 123}
 % END INVOICE DATA
 % START SENDERS DATA
 \newcommand{\senderName}{Jean Doe}
