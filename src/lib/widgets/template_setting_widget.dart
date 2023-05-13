@@ -46,11 +46,10 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
           },
           controller: controller,
         ),
-        SizedBox(
+        const SizedBox(
           width: 20,
         ),
         MintYButton(
-          // text: const Text("Speichern", style: MintY.heading4White),
           text: const Icon(
             Icons.save,
             color: Colors.white,
@@ -58,10 +57,6 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
           width: 50,
           color: MintY.currentColor,
           onPressed: () {
-            // remove all latex key characters from the value
-            value = value.replaceAll(r'\', '');
-            value = value.replaceAll('{', '');
-            value = value.replaceAll('}', '');
             TemplateSettingService.saveValue(latexKey, value);
             controller.text = value;
           },

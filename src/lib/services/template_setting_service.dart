@@ -46,9 +46,8 @@ class TemplateSettingService {
     // Save the templateSettings map in the template file
     List<String> templateLines = _getLinesFromSettingsFile();
 
-    print("Huhu");
-
     // Read the lines and store the settings in the templateSettings map
+    bool settingSet = false;
     for (int i = 0; i < templateLines.length; i++) {
       String line = templateLines[i];
       if (line.startsWith(r'\newcommand{')) {
@@ -62,10 +61,22 @@ class TemplateSettingService {
         lineSplit[0] = lineSplit[0].replaceAll('\\', "");
         // Check if the key is the same as the key we are looking for
         if (lineSplit[0] == key) {
+          if (value.isEmpty) {
+            // If the key is empty, remove the line
+            templateLines.removeAt(i);
+            i--;
+            settingSet = true;
+            continue;
+          }
           // If the key is the same, replace the value
           templateLines[i] = r'\newcommand{\' + key + r'}{' + value + r'}';
+          settingSet = true;
         }
       }
+    }
+    if (!settingSet) {
+      // If the setting is not set, add it to the end of the file
+      templateLines.add(r'\newcommand{\' + key + r'}{' + value + r'}');
     }
     // Write the templateLines to the template file
     File templateFile = File('${getConfigDirectory()}/template.tex');
