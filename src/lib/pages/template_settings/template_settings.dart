@@ -107,7 +107,7 @@ class TemplateSettingsPage extends StatelessWidget {
           latexKey: "invoiceSalutation",
         ),
         SettingWidgetTextLine(
-            description: "Pfad zu Ihrem Logo\n(bis 150px)",
+            description: "Pfad zu Ihrem Logo\n(.png, bis 150px)",
             defaultValue: "",
             configKey: "logoPath"),
       ],
