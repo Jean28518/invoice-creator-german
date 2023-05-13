@@ -7,18 +7,7 @@ import 'package:invoice/services/helpers.dart';
 import 'package:invoice/widgets/mint_y.dart';
 
 class InvoiceService {
-  static List<InvoiceElement> invoiceElements = [
-    InvoiceElement(
-        type: InvoiceElementType.article,
-        name: "Gummibärchen Silber",
-        pricePerUnit: 12,
-        amount: 10),
-    InvoiceElement(
-        type: InvoiceElementType.article,
-        name: "Gummibärchen Gold",
-        pricePerUnit: 7,
-        amount: 6),
-  ];
+  static List<InvoiceElement> invoiceElements = [];
 
   // CURRENT CUSTOMER DATA
 
