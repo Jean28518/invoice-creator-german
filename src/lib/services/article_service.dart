@@ -29,7 +29,7 @@ class ArticleService {
 
   static void save() {
     // save articles to .csv file in config folder
-    File articleFile = File("${getConfigDirectory()}articles.csv");
+    File articleFile = File("${getInvoicesDirectory()}/data/articles.csv");
     List<String> lines = ["description;pricePerUnit;amount"];
     for (Article article in articles) {
       lines.add(

@@ -32,7 +32,7 @@ class CustomerService {
 
   static void save() {
     // save customers to .csv file in config folder
-    File customerFile = File("${getConfigDirectory()}customers.csv");
+    File customerFile = File("${getInvoicesDirectory()}/data/customers.csv");
     List<String> lines = ["companyName;name;street;zip;city;country"];
     for (Customer customer in customers) {
       lines.add(
