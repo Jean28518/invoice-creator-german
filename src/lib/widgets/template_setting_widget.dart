@@ -57,6 +57,8 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
           width: 50,
           color: MintY.currentColor,
           onPressed: () {
+            // Replace new line with spaces because it will otherwise crash the .latex file
+            value = value.replaceAll("\n", " ");
             TemplateSettingService.saveValue(latexKey, value);
             controller.text = value;
           },
