@@ -78,8 +78,12 @@
 	\begin{letter}{\adressOne \\ 
 	\customerStreet \\ \customerZIP \ \customerCity}
 	
-			\includegraphics[width=0.15\textwidth]{logo.png}			
+			\includegraphics[width=0.15\textwidth]{logo.png}	
+			\ifcsname invoiceSalutation\endcsname
 			\opening{\invoiceSalutation}
+			\else
+			\opening{ }
+			\fi		
 			\invoiceText
 		    \begin{invoice}{Euro}{0}
 			    \input{_invoice}

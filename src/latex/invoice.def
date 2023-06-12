@@ -299,8 +299,8 @@
 	\def\Currency			{W\"ahrung}%
 	\def\Factor			{Faktor}%
 	\def\Activity			{Bezeichnung}%
-	\def\Count			{Anzahl}%
-	\def\UnitRate			{Preis/Stunde}%
+	\def\Count			{Menge}%
+	\def\UnitRate			{Preis/Einheit}%
 	\def\Fees			{Leistungen}%
 	\def\VAT			{MWSt.}%
 	\def\Expenses			{Auslagen}%
