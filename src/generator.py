@@ -216,7 +216,7 @@ def main():
         # Read binary from logo.png
         f = open(args.logo, "rb")
         binary = f.readlines()
-        f = open("/latex/logo.png", "wb")
+        f = open(f"{cache_dir}/latex/logo.png", "wb")
         f.writelines(binary)
         f.close()
     
