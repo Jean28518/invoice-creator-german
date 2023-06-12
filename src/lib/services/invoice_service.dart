@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:invoice/datatypes/invoice_element.dart';
+import 'package:invoice/pages/invoice_creation/invoice_creation.dart';
+import 'package:invoice/pages/invoice_creation/invoice_waiting_screen.dart';
 import 'package:invoice/services/config_service.dart';
 import 'package:invoice/services/helpers.dart';
 import 'package:invoice/widgets/mint_y.dart';
@@ -23,6 +25,15 @@ class InvoiceService {
     invoiceElements.removeWhere((element) => element.id == id);
   }
 
+  static void clearInvoiceElements() {
+    invoiceElements.clear();
+    currentCompanyName = "";
+    currentContactPerson = "";
+    currentCustomerStreet = "";
+    currentCustomerZip = "";
+    currentCustomerCity = "";
+  }
+
   static void generateInvoice(
       {bool preview = false, required BuildContext context}) async {
     if ((currentCompanyName == "" && currentContactPerson == "") ||
@@ -39,6 +50,18 @@ class InvoiceService {
       return;
     }
 
+    // Navigate to waiting screen
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => InvoiceCreationWaitingPage(
+                  creationFunction: _generateInvoice(preview: preview),
+                )));
+  }
+
+  static Future<void> _generateInvoice({
+    bool preview = false,
+  }) async {
     var arguments = [
       "generator.py",
       "--dryRun",
@@ -94,7 +117,7 @@ class InvoiceService {
       arguments.add(logoPath);
     }
 
-    print(arguments);
+    clearInvoiceElements();
 
     var result = await Process.run("/usr/bin/python3", arguments);
 
@@ -108,11 +131,8 @@ class InvoiceService {
 
     await Process.run("touch", ["/tmp/rechnungs-assistent/do"]);
 
-    // If ${getCacheDirectory()}/latex/_main.pdf" does not exist, wait for it
-
-    if (!File("${getCacheDirectory()}/latex/_main.pdf").existsSync()) {
-      await Future.delayed(Duration(milliseconds: 5000));
-    }
+    // Wait for file to be generated
+    await Future.delayed(const Duration(milliseconds: 3000));
 
     // Get current month and year
     var now = DateTime.now();
@@ -126,6 +146,7 @@ class InvoiceService {
         "${getCacheDirectory()}/latex/_main.pdf",
         "${getInvoicesDirectory()}/$year/$month/Rechnung-$invoiceNumber.pdf"
       ]);
+      // Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
     }
   }
 }

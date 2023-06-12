@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:invoice/datatypes/article.dart';
 import 'package:invoice/datatypes/invoice_element.dart';
+import 'package:invoice/pages/loading_screen.dart';
 import 'package:invoice/pages/template_settings/template_settings.dart';
 import 'package:invoice/services/article_service.dart';
 import 'package:invoice/services/helpers.dart';
@@ -19,6 +20,7 @@ class InvoiceCreationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    invoiceElementTableWidgetKey = GlobalKey();
     return MintYPage(
       title: "Rechnung erstellen",
       contentElements: [
@@ -76,6 +78,7 @@ class InvoiceCreationPage extends StatelessWidget {
           height: 10,
         ),
         InvoiceElementTableWidget(key: invoiceElementTableWidgetKey),
+        // const InvoiceElementTableWidget(),
       ],
       bottom: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,15 +117,15 @@ class InvoiceCreationPage extends StatelessWidget {
                 width: 10,
               ),
               MintYButton(
-                height: 50,
-                text: Text(
-                  "Speichern",
-                  style: MintY.heading3White,
-                ),
-                color: MintY.currentColor,
-                onPressed: () =>
-                    InvoiceService.generateInvoice(context: context),
-              ),
+                  height: 50,
+                  text: const Text(
+                    "Erstellen",
+                    style: MintY.heading3White,
+                  ),
+                  color: MintY.currentColor,
+                  onPressed: () => {
+                        InvoiceService.generateInvoice(context: context),
+                      }),
             ],
           ),
           Row(
@@ -161,6 +164,9 @@ class InvoiceElementTableWidgetState extends State<InvoiceElementTableWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (InvoiceService.invoiceElements.isEmpty) {
+      return Container();
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -518,7 +524,7 @@ class ArticleCreationWidget extends StatelessWidget {
                     width: 20,
                   ),
                   MintYButtonNavigate(
-                    route: const InvoiceCreationPage(),
+                    route: InvoiceCreationPage(),
                     text: const Text(
                       "Artikel speichern",
                       style: MintY.heading5White,
