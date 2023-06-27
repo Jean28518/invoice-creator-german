@@ -23,6 +23,7 @@ class InvoiceCreationPage extends StatelessWidget {
     invoiceElementTableWidgetKey = GlobalKey();
     return MintYPage(
       title: "Rechnung erstellen",
+      centerContentElements: false,
       contentElements: [
         Row(
           mainAxisSize: MainAxisSize.max,

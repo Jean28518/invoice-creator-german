@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 typedef StringCallback = void Function(String);
 
 class MintY {
-  static Color currentColor = Color(0xff53abbb);
+  static Color currentColor = Color(0xff09928b);
 
   static Color secondaryColor = Color(0xff2ab9a4);
 
@@ -239,13 +239,15 @@ class MintYPage extends StatelessWidget {
   late String title;
   late List<Widget> contentElements;
   late Widget customContentElement;
+  late bool centerContentElements;
   Widget? bottom;
 
   MintYPage(
       {String title = "",
       List<Widget> contentElements = const [],
       Widget customContentElement = const Text(""),
-      Widget? bottom}) {
+      Widget? bottom,
+      this.centerContentElements = true}) {
     this.title = title;
     this.contentElements = contentElements;
     this.customContentElement = customContentElement;
@@ -287,12 +289,17 @@ class MintYPage extends StatelessWidget {
                 ? Expanded(
                     child: Container(
                       padding: EdgeInsets.all(16.0),
-                      child: Center(
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: contentElements,
-                        ),
-                      ),
+                      child: centerContentElements
+                          ? Center(
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: contentElements,
+                              ),
+                            )
+                          : ListView(
+                              shrinkWrap: true,
+                              children: contentElements,
+                            ),
                     ),
                   )
                 : customContentElement,
