@@ -3,6 +3,7 @@ import time
 
 # if file "do" exists, then run latex
 os.system("mkdir -p /tmp/rechnungs-assistent/")
+counter = 0
 while True:
     if os.path.exists("/tmp/rechnungs-assistent/do"):
         os.remove("/tmp/rechnungs-assistent/do")
@@ -23,6 +24,18 @@ while True:
     if os.path.exists("/tmp/rechnungs-assistent/stop"):
         os.remove("/tmp/rechnungs-assistent/stop")
         break
+
+    # Increase counter
+    counter += 1
+
+    # Only live further on, if the file /tmp/rechnungs-assistent/live exists
+    if counter >= 30:
+        counter = 0
+        # Check if /tmp/rechnungs-assistent/live exists
+        if os.path.exists("/tmp/rechnungs-assistent/live"):
+            os.system("rm /tmp/rechnungs-assistent/live")
+        else: 
+            exit(0)
 
     # sleep 1 second
     time.sleep(1)

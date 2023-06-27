@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,10 @@ import 'package:invoice/widgets/mint_y.dart';
 
 class InvoiceService {
   static List<InvoiceElement> invoiceElements = [];
+
+  static void init() {
+    keepRunnerWorking();
+  }
 
   // CURRENT CUSTOMER DATA
 
@@ -148,5 +153,14 @@ class InvoiceService {
       ]);
       // Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
     }
+  }
+
+  /// Called by [init] to keep the runner working
+  static void keepRunnerWorking() async {
+    await Process.run("touch", ["/tmp/rechnungs-assistent/live"]);
+
+    // Call the same function again after 25 seconds
+    Timer.periodic(
+        const Duration(seconds: 25), (Timer t) => keepRunnerWorking());
   }
 }

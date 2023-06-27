@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invoice/pages/loading_screen.dart';
+import 'package:invoice/services/invoice_service.dart';
 import 'package:invoice/widgets/mint_y.dart';
 
 void main() {
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    InvoiceService.init();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: MintY.theme(),
