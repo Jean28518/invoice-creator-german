@@ -50,8 +50,8 @@ class InvoiceService {
       return;
     }
     if (invoiceElements.isEmpty) {
-      MintY.showMessage(
-          context, "Bitte fügen Sie mindestens eine Rechnungsposition hinzu!");
+      MintY.showMessage(context,
+          "Bitte fügen Sie mindestens eine Rechnungsposition hinzu!\nDefinieren Sie die Artikelbeschreibung, den Preis pro Einheit und die Menge.\nDrücken Sie am Ende den '+' Knopf.");
       return;
     }
 
@@ -110,7 +110,7 @@ class InvoiceService {
     if (discount.isNotEmpty) {
       arguments.add("--discount");
       for (var element in discount) {
-        String s = "${element.name};${element.pricePerUnit}";
+        String s = "${element.name};${element.price}";
         arguments.add(s);
       }
     }
