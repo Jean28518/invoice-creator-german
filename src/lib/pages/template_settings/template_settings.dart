@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invoice/services/config_service.dart';
 import 'package:invoice/services/template_setting_service.dart';
 import 'package:invoice/widgets/mint_y.dart';
 import 'package:invoice/widgets/setting_widget.dart';
@@ -117,6 +118,22 @@ class TemplateSettingsPage extends StatelessWidget {
           MintYButton(
             text: const Text("Zurück", style: MintY.heading4White),
             onPressed: () {
+              /// Trigger init to reload the settings from file
+              /// and destroy temporary settings, which the user could have made
+              /// but not saved
+              TemplateSettingService.init();
+              ConfigHandler.loadConfigFromFile();
+
+              Navigator.pop(context);
+            },
+            color: MintY.currentColor,
+          ),
+          const SizedBox(width: 20),
+          MintYButton(
+            text: const Text("Alles Speichern", style: MintY.heading4White),
+            onPressed: () {
+              TemplateSettingService.saveAllTemplateSettings();
+              ConfigHandler.saveConfigToFile();
               Navigator.pop(context);
             },
             color: MintY.currentColor,

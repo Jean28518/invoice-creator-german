@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:invoice/pages/invoice_creation/invoice_creation.dart';
-import 'package:invoice/pages/invoice_creation/test.dart';
-import 'package:invoice/pages/template_settings/template_settings.dart';
 import 'package:invoice/widgets/mint_y.dart';
 
 class InvoiceCreationWaitingPage extends StatelessWidget {

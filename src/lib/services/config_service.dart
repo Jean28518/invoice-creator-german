@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:invoice/services/helpers.dart';
 
 class ConfigHandler {
+  /// There could be temporary settings, which the user did not save yet
+  /// (only while the user is in the settings screen)
   static Map<String, dynamic> configMap = {
     "config_initialized": false,
   };

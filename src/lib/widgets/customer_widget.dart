@@ -30,7 +30,7 @@ class CustomerWidget extends StatelessWidget {
           children: [
             Expanded(
               child: MintYTextField(
-                hintText: "Firma",
+                hintText: "Firma (optional)",
                 onChanged: (p0) {
                   p0 = p0.replaceAll(";", "");
                   InvoiceService.currentCompanyName = p0;

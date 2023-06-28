@@ -3,7 +3,16 @@ import 'dart:io';
 import 'package:invoice/services/helpers.dart';
 
 class TemplateSettingService {
+  /// In here also temporary settings are stored, which the user did not save yet
+  /// /// (only while the user is in the settings screen)
   static Map<String, String> templateSettings = {};
+
+  /// Saves all template settings, which the user could have changed
+  static void saveAllTemplateSettings() {
+    for (String key in templateSettings.keys) {
+      saveValue(key, templateSettings[key]!);
+    }
+  }
 
   static List<String> _getLinesFromSettingsFile() {
     // if the template file does not exist, copy it from latex/template.tex

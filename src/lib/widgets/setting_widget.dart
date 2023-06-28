@@ -40,6 +40,11 @@ class SettingWidgetTextLine extends StatelessWidget {
           hintText: defaultValue,
           onChanged: (String newValue) {
             value = newValue;
+
+            /// Safe the value to the config map.
+            /// The user can trigger a save to the config file by pressing the
+            /// save button on the bottom of the settings page.
+            ConfigHandler.setValueUnsafe(configKey, value);
           },
           controller: controller,
         ),

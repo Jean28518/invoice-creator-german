@@ -43,6 +43,8 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
           hintText: defaultValue,
           onChanged: (String newValue) {
             value = newValue;
+            TemplateSettingService.templateSettings[latexKey] =
+                value.replaceAll("\n", " ");
           },
           controller: controller,
         ),
