@@ -8,7 +8,6 @@ import 'package:invoice/widgets/template_setting_widget.dart';
 // \newcommand{\invoiceSalutation}{Sehr geehrte Damen und Herren,} % die Anrede
 // \newcommand{\invoiceText}{für die von mir erbrachte Leistung erhalten Sie hiermit die Rechnung. Bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\invoiceReference) bis zum \payDate \ auf das angegebene Konto ein.} % Rechnungstext
 // \newcommand{\invoiceHint}{Im ausgewiesenen Betrag ist gemäß § 19 UStG keine Umsatzsteuer enthalten.}
-// \newcommand{\invoiceEnclosures}{} % \encl{} einfügen
 // \newcommand{\invoiceClosing}{Mit freundlichen Grüßen}
 
 // % ################## Personal DATA ##################
