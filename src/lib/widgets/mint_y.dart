@@ -210,6 +210,7 @@ class MintY {
                     child: Text(
                       message,
                       style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   const SizedBox(
