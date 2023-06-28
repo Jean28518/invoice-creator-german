@@ -31,9 +31,7 @@ import 'package:invoice/widgets/template_setting_widget.dart';
 // \newcommand{\accountBIC}{DRTTZZUUXXX}
 
 class TemplateSettingsPage extends StatelessWidget {
-  TemplateSettingsPage({super.key}) {
-    TemplateSettingService.init();
-  }
+  const TemplateSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -88,28 +86,28 @@ class TemplateSettingsPage extends StatelessWidget {
             defaultValue: "DE123456789",
             latexKey: "taxID"),
         TemplateSettingWidgetTextLine(
+          description: "Anrede",
+          defaultValue: "Sehr geehrte Damen und Herren,",
+          latexKey: "invoiceSalutation",
+        ),
+        TemplateSettingWidgetTextLine(
             description: "Rechnungstext",
             defaultValue:
-                "für die von mir erbrachte Leistung erhalten Sie hiermit die Rechnung. Bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\\invoiceReference) bis zum \\payDate \\ auf das angegebene Konto ein.",
+                "bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\\invoiceReference) bis zum \\payDate \\ auf das angegebene Konto ein.",
             latexKey: "invoiceText"),
         TemplateSettingWidgetTextLine(
           description: "Rechnungshinweis",
           defaultValue:
-              "Im ausgewiesenen Betrag ist gemäß § 19 UStG keine Umsatzsteuer enthalten.",
+              "Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.",
           latexKey: "invoiceHint",
         ),
         TemplateSettingWidgetTextLine(
             description: "Rechnungsabschluss",
             defaultValue: "Mit freundlichen Grüßen",
             latexKey: "invoiceClosing"),
-        TemplateSettingWidgetTextLine(
-          description: "Anrede",
-          defaultValue: "Sehr geehrte Damen und Herren,",
-          latexKey: "invoiceSalutation",
-        ),
         SettingWidgetTextLine(
-            description: "Pfad zu Ihrem Logo\n(.png, bis 150px)",
-            defaultValue: "",
+            description: "Absoluter Pfad zum Logo\n(.png, bis 150px)",
+            defaultValue: "/home/benutzer/Bilder/logo.png",
             configKey: "logoPath"),
       ],
       bottom: Row(

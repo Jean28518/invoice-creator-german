@@ -7,16 +7,16 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
   String defaultValue = '';
   String value = '';
   String latexKey = '';
+  bool displaySaveButton;
 
   TemplateSettingWidgetTextLine(
       {super.key,
       required this.description,
       required this.defaultValue,
-      required this.latexKey}) {
+      required this.latexKey,
+      this.displaySaveButton = true}) {
     if (TemplateSettingService.templateSettings[latexKey] != null) {
       value = TemplateSettingService.templateSettings[latexKey]!;
-    } else {
-      value = defaultValue;
     }
   }
 
@@ -51,20 +51,22 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
         const SizedBox(
           width: 20,
         ),
-        MintYButton(
-          text: const Icon(
-            Icons.save,
-            color: Colors.white,
-          ),
-          width: 50,
-          color: MintY.currentColor,
-          onPressed: () {
-            // Replace new line with spaces because it will otherwise crash the .latex file
-            value = value.replaceAll("\n", " ");
-            TemplateSettingService.saveValue(latexKey, value);
-            controller.text = value;
-          },
-        )
+        displaySaveButton
+            ? MintYButton(
+                text: const Icon(
+                  Icons.save,
+                  color: Colors.white,
+                ),
+                width: 50,
+                color: MintY.currentColor,
+                onPressed: () {
+                  // Replace new line with spaces because it will otherwise crash the .latex file
+                  value = value.replaceAll("\n", " ");
+                  TemplateSettingService.saveValue(latexKey, value);
+                  controller.text = value;
+                },
+              )
+            : Container(),
       ],
     );
   }

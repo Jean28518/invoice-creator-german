@@ -943,7 +943,8 @@ class MintYTextField extends StatelessWidget {
         fillColor: Theme.of(context).canvasColor,
         filled: true,
         hintText: hintText,
-        contentPadding: const EdgeInsets.only(bottom: 5, left: 12, right: 3),
+        contentPadding:
+            const EdgeInsets.only(bottom: 5, left: 12, right: 3, top: 25),
       ),
       style: Theme.of(context).textTheme.bodySmall,
       cursorColor: MintY.currentColor,

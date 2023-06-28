@@ -57,7 +57,6 @@ def main():
     if not does_file_exist(f"{config_dir}/template.tex"):
         os.system("cp latex/template.tex.example " + config_dir + "/template.tex")
 
-    print("Generating invoice...")
     # Create the parser
     parser = argparse.ArgumentParser(description='German invoice generator.')
 
@@ -95,6 +94,7 @@ def main():
     # Parse the command-line arguments
     args = parser.parse_args()
 
+    print("Generating invoice...")
 
     # copy all latex files to cache directory
     os.system("cp -r latex/ " + cache_dir)

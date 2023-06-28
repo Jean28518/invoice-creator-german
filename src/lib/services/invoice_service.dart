@@ -157,14 +157,12 @@ class InvoiceService {
 
   /// Called by [init] to keep the runner working
   static void keepRunnerWorking() async {
-    try {
-      await Process.run("touch", ["/tmp/rechnungs-assistent/live"]);
-    } catch (e) {
-      print("Error while touching /tmp/rechnungs-assistent/live: $e");
-    }
-
     // Call the same function again after 25 seconds
     Timer.periodic(
-        const Duration(seconds: 25), (Timer t) => keepRunnerWorking());
+      const Duration(seconds: 25),
+      (timer) {
+        Process.run("touch", ["/tmp/rechnungs-assistent/live"]);
+      },
+    );
   }
 }

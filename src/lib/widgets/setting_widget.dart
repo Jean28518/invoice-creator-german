@@ -8,13 +8,15 @@ class SettingWidgetTextLine extends StatelessWidget {
   String defaultValue = '';
   String value = '';
   String configKey = '';
+  bool displaySaveButton;
 
   SettingWidgetTextLine(
       {super.key,
       required this.description,
       required this.defaultValue,
-      required this.configKey}) {
-    value = ConfigHandler.getValueUnsafe(configKey, defaultValue);
+      required this.configKey,
+      this.displaySaveButton = true}) {
+    value = ConfigHandler.getValueUnsafe(configKey, '');
   }
 
 // Controller:
@@ -51,17 +53,19 @@ class SettingWidgetTextLine extends StatelessWidget {
         const SizedBox(
           width: 20,
         ),
-        MintYButton(
-          text: const Icon(
-            Icons.save,
-            color: Colors.white,
-          ),
-          width: 50,
-          color: MintY.currentColor,
-          onPressed: () {
-            ConfigHandler.setValue(configKey, value);
-          },
-        )
+        displaySaveButton
+            ? MintYButton(
+                text: const Icon(
+                  Icons.save,
+                  color: Colors.white,
+                ),
+                width: 50,
+                color: MintY.currentColor,
+                onPressed: () {
+                  ConfigHandler.setValue(configKey, value);
+                },
+              )
+            : Container(),
       ],
     );
   }

@@ -1,6 +1,6 @@
 \newcommand{\invoiceSalutation}{Sehr geehrte Damen und Herren,}
-\newcommand{\invoiceText}{für die von mir erbrachte Leistung erhalten Sie hiermit die Rechnung. Bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\invoiceReference) bis zum \payDate \ auf das angegebene Konto ein.}
-\newcommand{\invoiceHint}{Im ausgewiesenen Betrag ist gemäß § 19 UStG keine Umsatzsteuer enthalten.}
+\newcommand{\invoiceText}{bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\invoiceReference) bis zum \payDate \ auf das angegebene Konto ein.}
+\newcommand{\invoiceHint}{Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.}
 \newcommand{\invoiceEnclosures}{}
 \newcommand{\invoiceClosing}{Mit freundlichen Grüßen}
 
