@@ -1,4 +1,6 @@
-# invoice-creator-german
+# Rechnungs-Assistent
+
+![invoices.png](invoices.png)
 
 ## How to run in development
 
