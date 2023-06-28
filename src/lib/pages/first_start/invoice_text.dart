@@ -16,7 +16,7 @@ class InvoiceTextEnteringPage extends StatelessWidget {
         Text(
           """Trage bitte die Texte für die Rechnung ein. 
           Diese können ebenfalls später in den Einstellungen verändert werden.
-          Möchtest Du ein Feld nicht benutzen, lasse es leer.""",
+          Möchtest Du ein Feld nicht benutzen, lösche den Inhalt.""",
           style: Theme.of(context).textTheme.bodyLarge,
           textAlign: TextAlign.center,
         ),

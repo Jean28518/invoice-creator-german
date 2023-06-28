@@ -16,7 +16,7 @@ class BasicDataEnteringPage extends StatelessWidget {
           """Trage bitte Die Daten zu Deinem Unternehmen ein. 
           Die Daten können später in den Einstellungen verändert werden.
           Kundendaten werden zu einem späteren Zeitpunkt definiert.
-          Möchtest Du ein Feld nicht benutzen, lasse es leer.""",
+          Möchtest Du ein Feld nicht benutzen, lösche den Inhalt.""",
           style: Theme.of(context).textTheme.bodyLarge,
           textAlign: TextAlign.center,
         ),
