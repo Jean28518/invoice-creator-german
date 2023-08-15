@@ -1,0 +1,165 @@
+<style>
+@media print {
+  @page { margin: 0mm 0mm 0mm 0mm;
+    size:210mm 297mm;
+  }
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.container {
+  width: 100%;
+}
+
+.column {
+  width: 33.33%;
+  float: left;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+  font-size: 13px;
+}
+
+thead {
+  border-bottom: 1px solid black;
+}
+
+tfoot {
+  border-top: 1px solid black;
+}
+
+td {
+    padding: 2px;
+}
+
+.invoice-item-name {
+    text-align: left;
+}
+
+</style>
+
+<div style="padding: 2cm;">
+   
+    <div class="container">
+        <div style="width: 55%; float: left;">
+            <img src="logo.png" style="height: 96px;">
+            <div style="height: 90px;"></div>
+
+
+            <div style="width: max-content; font-size: 10px;">
+                #!SEN-NAME - #!SEN-STREET, #!SEN-ZIP #!SEN-CITY
+                <div style="margin-top: 2px; background-color: black; height: 1px;"></div>
+            </div>
+
+            <div style="height: 10px;"></div>
+
+            <div>
+                #!REC-COMPANY <br>
+                #!REC-NAME <br>
+                #!REC-STREET <br>
+                #!REC-ZIP #!REC-CITY <br>
+            </div>
+
+        </div>
+        <div style="width: 13%; float: left; color: grey; text-align: right;">
+            <div style="height: 70px;"></div>
+            Anschrift <br>
+            <br>
+            <br>
+            <br>
+            E-Mail <br>
+            Telefon <br>
+            Webseite <br>
+            <br>
+            Institut <br>
+            IBAN <br>
+            BIC <br>
+        </div>
+        <div style="width: 2%; float: left;">
+            <div style="height: 1px;"></div>
+        </div>
+        <div style="width: 30%; float: left; color: grey;">
+            <div style="height: 70px;"></div>
+            #!SEN-NAME <br>
+            #!SEN-STREET <br>
+            #!SEN-ZIP #!SEN-CITY <br>
+            <br>
+            <a style="color: grey; text-decoration: none;" href="mailto:#!SEN-EMAIL">#!SEN-EMAIL</a> <br>
+            <a style="color: grey; text-decoration: none;" href="tel:#!SEN-PHONE">#!SEN-PHONE</a> <br>
+            <a style="color: grey; text-decoration: none;" href="https://#!SEN-WEBSITE">#!SEN-WEBSITE</a> <br>
+            <br>
+            #!MONEY-INSTITUTE <br>
+            #!IBAN <br>
+            #!BIC <br>            
+        </div>
+       
+    </div>
+
+    <div style="height: 330px;"></div>
+
+    <!-- <div style="height: 100px;"></div> -->
+    <div style="text-align: right; font-weight: 600;">
+        Rechnungsnummer: #!INVOICE-NUM<br>
+        #!SEN-CITY, den #!DATE<br>
+    </div>
+
+    <h3>Rechnung</h1>
+
+    <p>
+        <!-- Bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (01.01.1970) bis zum 29.08.2023 auf das angegebene Konto ein. Vielen Dank für Ihr Vertrauen. -->
+        #!MESSAGE
+    </p>
+
+    <table class="invoice-table">
+        <thead>
+          <tr>
+            <th style="width: 60%; text-align: left;">Bezeichnung</th>
+            <th>Preis/Einheit</th>
+            <th>Menge</th>
+            <th>Betrag</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr>
+            <td class="invoice-item-name">Product 1</td>
+            <td>$10.00</td>
+            <td>1</td>
+            <td>$10.00</td>
+          </tr> -->
+          #!ITEMS
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Gesamtbetrag (Netto)</td>
+            <td colspan="2">#!SUM-WITHOUT-VAT</td>
+          </tr>
+          <tr>
+              <td colspan="2">zzgl. Umsatzsteuer</td>
+              <td>#!VAT-PERCENT</td>
+              <td>#!VAT-ADDITION</td>
+            </tr>
+            <tr style="font-weight: 600;">
+              <td colspan="2">Gesamtbetrag (Brutto)</td>
+              <td colspan="2">#!SUM-WITH-VAT</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <p>
+        <!-- Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus. -->
+        #!FOOTER
+    </p>
+
+    Mit freundlichen Grüßen <br>
+    <br>
+    #!SEN-NAME
+</div>
+
+
