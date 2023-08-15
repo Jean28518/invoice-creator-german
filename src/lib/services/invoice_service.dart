@@ -151,7 +151,7 @@ class InvoiceService {
         "${getCacheDirectory()}/latex/_main.pdf",
         "${getInvoicesDirectory()}/$year/$month/Rechnung-$invoiceNumber.pdf"
       ]);
-      // Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
+      Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
     }
   }
 

@@ -18,6 +18,19 @@ argkeys_customer = [
     ["customerCountry", "Country of the customer", "Germany"]
 ]
 
+# Remove disturbing latex characters from string
+def removeLatexChars(string):
+    string = string.replace("\\", "")
+    string = string.replace("{", "")
+    string = string.replace("}", "")
+    string = string.replace("%", "")
+    string = string.replace("&", "\&")
+    string = string.replace("$", "")
+    string = string.replace("#", "")
+    string = string.replace("_", "")
+    string = string.replace("^", "")
+    string = string.replace("~", "")
+    return string
 
 
 
@@ -106,7 +119,7 @@ def main():
     # Save the values
     for i in range(len(argkeys_customer)):
         if args.__dict__[argkeys_customer[i][0]] != None:
-            lines = saveValue(lines, argkeys_customer[i][0], args.__dict__[argkeys_customer[i][0]])
+            lines = saveValue(lines, argkeys_customer[i][0], removeLatexChars(args.__dict__[argkeys_customer[i][0]]))
         else:
             # Save default value
             lines = saveValue(lines, argkeys_customer[i][0], argkeys_customer[i][2])
@@ -166,7 +179,7 @@ def main():
                 print(f'Error: Wrong format for article: "{article}". Use: --article "<description>;<pricePerUnit>;<amount>" "<description>;<pricePerUnit>;<amount>"')
                 sys.exit(1)
             # Save to ../latex/_invoice.tex
-            lines.append("\\Fee{" + segments[0] + "}{" + segments[1] + "}{" + segments[2] + "}\n")
+            lines.append("\\Fee{" + removeLatexChars(segments[0]) + "}{" + removeLatexChars(segments[1]) + "}{" + removeLatexChars(segments[2]) + "}\n")
 
     ## EXPENSES
     expenses = args.expense
@@ -179,7 +192,7 @@ def main():
                 print(f'Error: Wrong format for expense: "{expense}". Use: --expense "<description>;<price>" "<description>;<price>"')
                 sys.exit(1)
             # Save to ../latex/_invoice.tex
-            lines.append("\\EBCi{" + segments[0] + "}{" + segments[1] + "}\n")
+            lines.append("\\EBCi{" + removeLatexChars(segments[0]) + "}{" + removeLatexChars(segments[1]) + "}\n")
 
     ## DISCOUNT
     discount = args.discount
@@ -190,7 +203,7 @@ def main():
             print(f'Error: Wrong format for discount: "{discount}". Use: --discount "Discount;10"')
             sys.exit(1)
         # Save to ../latex/_invoice.tex
-        lines.append("\\Discount{" + segments[0] + "}{" + segments[1] + "}\n")
+        lines.append("\\Discount{" + removeLatexChars(segments[0]) + "}{" + removeLatexChars(segments[1]) + "}\n")
 
     # Save file
     f = open(f"{cache_dir}/latex/_invoice.tex", "w")
@@ -236,3 +249,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
