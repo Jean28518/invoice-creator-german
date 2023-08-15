@@ -34,3 +34,20 @@ python3 runner.py
 ```bash
 bash build-deb.sh
 ```
+
+## How to build the bundle
+
+```bash
+bash build-bundle.sh
+```
+
+## How to build flatpak package (work in progress)
+
+It uses the bundle.zip of the release specified in the .yml file
+
+```bash
+flatpak install runtime/org.freedesktop.Sdk.Extension.texlive/x86_64/22.08
+flatpak-builder build-dir de.linuxguides.RechnungsAssistent.yml  --user --force-clean --install
+flatpak run de.linuxguides.RechnungsAssistent
+#flatpak --filesystem=host run de.linuxguides.RechnungsAssistent # For access to all files
+```
