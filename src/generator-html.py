@@ -80,6 +80,9 @@ def main():
 
     # Path to the template file
     parser.add_argument('--template', help='Path to the template file. Default: template.csv', default=f'{config_dir}/template.csv')
+    
+    # VAT
+    parser.add_argument('--vat', help='VAT in percent. Default: 0', default='0')
 
     # Get number of payment days
     parser.add_argument('--paymentDays', help='Number of days until payment is due. Default: 14', default='14')
@@ -132,6 +135,76 @@ def main():
         invoice_number = args.invoiceNumber
 
 
+
+    # Get Articles
+    articles = []
+    articles_string_list = args.article
+    if articles_string_list != None:
+        for article_string in articles_string_list:
+            # Parse the article
+            segments = article_string.split(";")
+            if len(segments) != 3:
+                print(f'Error: Wrong format for article: "{article_string}". Use: --article "<description>;<pricePerUnit>;<amount>" "<description>;<pricePerUnit>;<amount>"')
+                sys.exit(1)
+            articles.append(segments)
+
+    # Get Expenses
+    expenses = []
+    expenses_string_list = args.expense
+    if expenses_string_list != None:
+        for expense_string in expenses_string_list:
+            # Parse the expense
+            segments = expense_string.split(";")
+            if len(segments) != 2:
+                print(f'Error: Wrong format for expense: "{expense_string}". Use: --expense "<description>;<price>" "<description>;<price>"')
+                sys.exit(1)
+            expenses.append(segments)
+    
+    # Get Discount
+    discounts = []
+    discount_string = args.discount
+    if discount_string != None:
+        segments = discount_string.split(";")
+        if len(segments) != 2:
+            print(f'Error: Wrong format for discount: "{discount_string}". Use: --discount "Discount;10"')
+            sys.exit(1)
+        discounts.append(segments)
+
+
+    # Generate html code for articles
+    # Example: 
+    #   <tr>
+    #     <td class="invoice-item-name">Product 1</td>
+    #     <td>$10.00</td>
+    #     <td>1</td>
+    #     <td>$10.00</td>
+    #   </tr>
+    table_html = ""
+    for article in articles:
+        table_html += f'<tr><td class="invoice-item-name">{article[0]}</td><td>{article[1]} €</td><td>{article[2]}</td><td>{float(article[1]) * float(article[2])} €</td></tr>\n'
+
+    for expense in expenses:
+        table_html += f'<tr><td class="invoice-item-name">{expense[0]}</td><td> - </td><td> - </td><td>{expense[1]} €</td></tr>\n'
+
+    for discount in discounts:
+        table_html += f'<tr><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>-{discount[1]} €</td></tr>\n'
+    
+    # Calculate sum
+    sum_netto = 0
+    for article in articles:
+        # Article price per unit * amount
+        sum_netto += float(article[1]) * float(article[2])
+    for expense in expenses:
+        # Expense price
+        sum_netto += float(expense[1])
+    for discount in discounts:
+        # Discount price
+        sum_netto -= float(discount[1])
+    
+    vat = float(args.vat)
+    vat_sum = sum_netto * (vat / 100)
+    sum_brutto = sum_netto + vat_sum
+
     # Replace all keys with the values (GENERATE THE HTML FILE)
     for i in range(len(lines)):
         # Template data
@@ -153,6 +226,15 @@ def main():
 
         # Invoice number
         lines[i] = lines[i].replace("#!INVOICE-NUM", invoice_number)
+
+        # Sum with VAT
+        lines[i] = lines[i].replace("#!SUM-WITHOUT-VAT", str(round(sum_netto, 2)) + " €")
+        lines[i] = lines[i].replace("#!VAT-PERCENT", str(vat) + " %")
+        lines[i] = lines[i].replace("#!VAT-ADDITION", str(round(vat_sum, 2)) + " €")
+        lines[i] = lines[i].replace("#!SUM-WITH-VAT", str(round(sum_brutto, 2)) + " €")
+
+        # Table
+        lines[i] = lines[i].replace("#!ITEMS", table_html)
 
     # Save .html file to cache
     f = open(f"{cache_dir}/invoice.html", "w")
