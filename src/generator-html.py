@@ -4,37 +4,43 @@ import sys
 import argparse
 import datetime
 
-# \newcommand{\customerCompany}{Firma XYZ} %ggf. Firma
-# \newcommand{\customerName}{Max Mustermann} % Name
-# \newcommand{\customerStreet}{Robert-Koch-Str. 12} % Straße
-# \newcommand{\customerZIP}{12345} % Postleitzahl
-# \newcommand{\customerCity}{Musterstadt} % Ort
+# argument key , description, default value, key in html
 argkeys_customer = [
-    ["customerCompany", "Name of the company" , "FirmaXYZ"],
-    ["customerName", "Name of the customer", "Max Mustermann"],
-    ["customerStreet", "Street of the customer", "Robert-Koch-Str. 12"],
-    ["customerZIP", "Postal code of the customer", "12345"],
-    ["customerCity", "City of the customer", "Musterstadt"],
-    ["customerCountry", "Country of the customer", "Germany"]
+    ["customerCompany", "Name of the company" , "FirmaXYZ", "REC-COMPANY"],
+    ["customerName", "Name of the customer", "Max Mustermann" , "REC-NAME"],
+    ["customerStreet", "Street of the customer", "Robert-Koch-Str. 12", "REC-STREET"],
+    ["customerZIP", "Postal code of the customer", "12345", "REC-ZIP"],
+    ["customerCity", "City of the customer", "Musterstadt", "REC-CITY"],
+    # ["customerCountry", "Country of the customer", "Germany"]
 ]
 
 def saveValue(lines, key, value):
     for i in range(len(lines)):
-        if lines[i].startswith("\\newcommand{\\" + key + "}"):
-            lines[i] = "\\newcommand{\\" + key + "}{" + value + "}\n"
+        if lines[i].startswith(key + ";"):
+            lines[i] = key + ";" + value + "\n"
             return lines    
-    lines.append("\\newcommand{\\" + key + "}{" + value + "}\n")
+    lines.append(key + ";" + value + "\n")
     return lines
+
+
+def getValue(lines, key, default=''):
+    for i in range(len(lines)):
+        if lines[i].startswith(key + ";"):
+            return lines[i].split(";")[1].replace("\n", "")
+    return default
+
 
 def does_file_exist(file_path):
     return os.path.exists(file_path) and os.path.isfile(file_path)
+
 
 def get_all_lines_from_file(file_path):
     if not does_file_exist(file_path):
         return []
     with open(file_path, "r") as f:
         return f.readlines()
-    
+
+
 def main():
     # get home directory
     home = os.path.expanduser("~")
@@ -52,9 +58,9 @@ def main():
     if not os.path.exists(config_dir):
         os.makedirs(config_dir)
 
-    # If template.tex does not exist, copy the example to the config folder
-    if not does_file_exist(f"{config_dir}/template.tex"):
-        os.system("cp latex/template.tex.example " + config_dir + "/template.tex")
+    # If template.csv does not exist, copy the example to the config folder
+    if not does_file_exist(f"{config_dir}/template.csv"):
+        os.system("cp {{current_dir}}/html/template.csv.example " + config_dir + "/template.csv")
 
     # Create the parser
     parser = argparse.ArgumentParser(description='German invoice generator.')
@@ -73,7 +79,7 @@ def main():
     parser.add_argument('--discount', help='Discount in euro. Format: --discount "Discount;25"')
 
     # Path to the template file
-    parser.add_argument('--template', help='Path to the template file. Default: template.tex', default=f'{config_dir}/template.tex')
+    parser.add_argument('--template', help='Path to the template file. Default: template.csv', default=f'{config_dir}/template.csv')
 
     # Get number of payment days
     parser.add_argument('--paymentDays', help='Number of days until payment is due. Default: 14', default='14')
@@ -95,9 +101,50 @@ def main():
 
     print("Generating invoice...")
 
-    print(f"file://{current_dir}/html/index.html")
+    # Get all lines from the invoice.html template
+    lines = get_all_lines_from_file(f"{current_dir}/html/invoice.html")
+    if len(lines) == 0:
+        print(f'Error: Could not open template file: "{current_dir}/html/invoice.html"')
+        sys.exit(1)
 
-    os.system(f"chromium --headless --disable-gpu --print-to-pdf=invoice.pdf --no-margins --no-pdf-header-footer  file://{current_dir}/html/invoice.html ")
+    # Get key and value from the template.csv
+    template_lines = get_all_lines_from_file(args.template)
+    if len(template_lines) == 0:
+        print(f'Error: Could not open template file: "{args.template}"')
+        sys.exit(1)
+
+    # Replace all keys with the values
+    for i in range(len(lines)):
+        # Template data
+        for j in range(len(template_lines)):
+            lines[i] = lines[i].replace("#!" + template_lines[j].split(";")[0], template_lines[j].split(";")[1].replace("\n", ""))
+
+
+        # Customer data
+        for j in range(len(argkeys_customer)):
+            if type(args.__dict__[argkeys_customer[j][0]]) == str:
+                lines[i] = lines[i].replace("#!" + argkeys_customer[j][3], args.__dict__[argkeys_customer[j][0]])
+            else:
+                # Save default value
+                lines[i] = lines[i].replace("#!" + argkeys_customer[j][3], argkeys_customer[j][2])
+
+    # Save .html file to cache
+    f = open(f"{cache_dir}/invoice.html", "w")
+    f.writelines(lines)
+    f.close()
+
+    # Copy logo to cache dir.
+    if args.logo != "":
+        if not os.path.exists(args.logo):
+            print(f'Error: Could not open logo file: "{args.logo}"')
+            sys.exit(1)
+        os.system(f"cp {args.logo} {cache_dir}/logo.png")
+    else:
+        # Copy the default logo
+        os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
+
+
+    os.system(f"chromium --headless --disable-gpu --print-to-pdf={cache_dir}/invoice.pdf --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
 
 
     # # Save the values
@@ -205,17 +252,7 @@ def main():
     # f.writelines(lines)
     # f.close()
 
-    # # Copy logo to ../latex/_logo.png. Avoid Systemcall because of win compatibility
-    # if args.logo != "":
-    #     if not os.path.exists(args.logo):
-    #         print(f'Error: Could not open logo file: "{args.logo}"')
-    #         sys.exit(1)
-    #     # Read binary from logo.png
-    #     f = open(args.logo, "rb")
-    #     binary = f.readlines()
-    #     f = open(f"{cache_dir}/latex/logo.png", "wb")
-    #     f.writelines(binary)
-    #     f.close()
+
     
     # print("invoice-number: " + invoice_number)
 
