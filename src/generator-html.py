@@ -113,7 +113,26 @@ def main():
         print(f'Error: Could not open template file: "{args.template}"')
         sys.exit(1)
 
-    # Replace all keys with the values
+    # Get date
+    date = datetime.datetime.now().strftime("%d.%m.%Y")
+    payment_date = (datetime.datetime.now() + datetime.timedelta(days=int(args.paymentDays))).strftime("%d.%m.%Y")
+
+    # INVOICE NUMBER
+    # Ensure that this directory exists: invoices/currentyear/currentmonth
+    current_year = datetime.datetime.now().strftime("%Y")
+    current_month = datetime.datetime.now().strftime("%m")
+    # if the invoice directory does not exist, create it
+    invoice_dir = args.invoiceDir + "/" + current_year + "/" + current_month
+    if not os.path.exists(invoice_dir):
+        os.makedirs(invoice_dir)
+    # Generate invoice number from amount of files in the invoice folder Format: YYYY-MM-<number>
+    number = len(os.listdir(invoice_dir)) + 1
+    invoice_number = datetime.datetime.now().strftime("%Y-%m-") + str(number)
+    if args.invoiceNumber != "":
+        invoice_number = args.invoiceNumber
+
+
+    # Replace all keys with the values (GENERATE THE HTML FILE)
     for i in range(len(lines)):
         # Template data
         for j in range(len(template_lines)):
@@ -127,6 +146,13 @@ def main():
             else:
                 # Save default value
                 lines[i] = lines[i].replace("#!" + argkeys_customer[j][3], argkeys_customer[j][2])
+
+        # Date
+        lines[i] = lines[i].replace("#!DATE", date)
+        lines[i] = lines[i].replace("#!PAY-DATE", payment_date)
+
+        # Invoice number
+        lines[i] = lines[i].replace("#!INVOICE-NUM", invoice_number)
 
     # Save .html file to cache
     f = open(f"{cache_dir}/invoice.html", "w")
@@ -144,53 +170,11 @@ def main():
         os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
 
 
+
     os.system(f"chromium --headless --disable-gpu --print-to-pdf={cache_dir}/invoice.pdf --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
 
 
-    # # Save the values
-    # for i in range(len(argkeys_customer)):
-    #     if args.__dict__[argkeys_customer[i][0]] != None:
-    #         lines = saveValue(lines, argkeys_customer[i][0], removeLatexChars(args.__dict__[argkeys_customer[i][0]]))
-    #     else:
-    #         # Save default value
-    #         lines = saveValue(lines, argkeys_customer[i][0], argkeys_customer[i][2])
-    
-
-    # # Serch for line with \newcommand{\adress1} and replace it with \newcommand{\adress1}{\customerCompany \\ \customerName} if customerCompany and customerName are not empty
-    # # otherwise replace it with \newcommand{\adress1}{\customerCompany \customerName} that we don't have an unnecessary line break
-    # for i in range(len(lines)):
-    #     if lines[i].startswith("\\newcommand{\\adressOne}"):
-    #         if args.customerCompany == None or args.customerName == None or args.customerCompany == "" or args.customerName == "":
-    #             lines[i] = "\\newcommand{\\adressOne}{\customerCompany \customerName}\n"
-    #         else:
-    #             lines[i] = "\\newcommand{\\adressOne}{\customerCompany \\\\ \customerName}\n"
-    #         break
-
-
-    # ## INVOICE NUMBER
-    # # Ensure that this directory exists: invoices/currentyear/currentmonth
-    # current_year = datetime.datetime.now().strftime("%Y")
-    # current_month = datetime.datetime.now().strftime("%m")
-    
-    # # if the invoice directory does not exist, create it
-    # invoice_dir = args.invoiceDir + "/" + current_year + "/" + current_month
-    # if not os.path.exists(invoice_dir):
-    #     os.makedirs(invoice_dir)
-
-
-    # # Generate invoice number from amount of files in the invoice folder Format: YYYY-MM-<number>
-    # number = len(os.listdir(invoice_dir)) + 1
-    # invoice_number = datetime.datetime.now().strftime("%Y-%m-") + str(number)
-    # if args.invoiceNumber != "":
-    #     invoice_number = args.invoiceNumber
-    # # Get current date in format DD.M.YYYY
-    # date = datetime.datetime.now().strftime("%d.%m.%Y")
-    # # Get payment date in format DD.M.YYYY
-    # payment_date = (datetime.datetime.now() + datetime.timedelta(days=int(args.paymentDays))).strftime("%d.%m.%Y")
-
-    # saveValue(lines, "invoiceDate", date)
-    # saveValue(lines, "payDate", payment_date)
-    # saveValue(lines, "invoiceReference", invoice_number)
+   
     
 
     # # Write the file
