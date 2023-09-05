@@ -253,85 +253,8 @@ def main():
 
 
 
-    os.system(f"chromium --headless --disable-gpu --print-to-pdf={cache_dir}/invoice.pdf --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
+    os.system(f"chromium --headless --disable-gpu --print-to-pdf={invoice_dir}/Rechnung-{invoice_number}.pdf --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
 
-
-   
-    
-
-    # # Write the file
-    # f = open(f"{cache_dir}/latex/_data.tex", "w")
-    # f.writelines(lines)
-    # f.close()
-
-    # ## ARTICLES
-    # # \Fee{Musterdienstleistung 1}{30.00}{4}
-    # lines = ["\ProjectTitle{Projekttitel}\n"]
-    # articles = args.article
-    # if articles != None:
-    #     for article in articles:
-    #         # Parse the article
-    #         segments = article.split(";")
-    #         if len(segments) != 3:
-    #             print(f'Error: Wrong format for article: "{article}". Use: --article "<description>;<pricePerUnit>;<amount>" "<description>;<pricePerUnit>;<amount>"')
-    #             sys.exit(1)
-    #         # Save to ../latex/_invoice.tex
-    #         lines.append("\\Fee{" + removeLatexChars(segments[0]) + "}{" + removeLatexChars(segments[1]) + "}{" + removeLatexChars(segments[2]) + "}\n")
-
-    # ## EXPENSES
-    # expenses = args.expense
-    # # \EBCi{Hotel, 12 Nächte} {2400.00}
-    # if expenses != None:
-    #     for expense in expenses:
-    #         # Parse the expense
-    #         segments = expense.split(";")
-    #         if len(segments) != 2:
-    #             print(f'Error: Wrong format for expense: "{expense}". Use: --expense "<description>;<price>" "<description>;<price>"')
-    #             sys.exit(1)
-    #         # Save to ../latex/_invoice.tex
-    #         lines.append("\\EBCi{" + removeLatexChars(segments[0]) + "}{" + removeLatexChars(segments[1]) + "}\n")
-
-    # ## DISCOUNT
-    # discount = args.discount
-    # # \Discount{Discount}{10}
-    # if discount != None:
-    #     segments = discount.split(";")
-    #     if len(segments) != 2:
-    #         print(f'Error: Wrong format for discount: "{discount}". Use: --discount "Discount;10"')
-    #         sys.exit(1)
-    #     # Save to ../latex/_invoice.tex
-    #     lines.append("\\Discount{" + removeLatexChars(segments[0]) + "}{" + removeLatexChars(segments[1]) + "}\n")
-
-    # # Save file
-    # f = open(f"{cache_dir}/latex/_invoice.tex", "w")
-    # f.writelines(lines)
-    # f.close()
-
-
-
-    # # Copy .config/template.tex to configfolder/latex/_template.tex. Avoid Systemcall because of win compatibility
-    # lines = get_all_lines_from_file(args.template)
-    # if len(lines) == 0:
-    #     print(f'Error: Could not open template file: "{args.template}"')
-    #     sys.exit(1)
-    # f = open(f"{cache_dir}/latex/_template.tex", "w")
-    # f.writelines(lines)
-    # f.close()
-
-
-    
-    # print("invoice-number: " + invoice_number)
-
-    # if args.dryRun:
-    #     sys.exit(0)
-
-    # # Change workind to /latex/_main.tex
-    # os.chdir(f"{cache_dir}/latex/")
-
-    # # Run command: pdflatex -output-directory=../  _main.tex
-    # os.system("pdflatex  _main.tex")
-    # # Move the _main.pdf to invoices/currentyear/currentmonth/YYY-MM-<number>.pdf
-    # os.system(f"mv _main.pdf {invoice_dir}/Rechnung-{invoice_number}.pdf")
     pass
 
 if __name__ == "__main__":
