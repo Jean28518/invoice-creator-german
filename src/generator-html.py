@@ -344,7 +344,7 @@ def main():
         chromium_exec = "chromium"
 
 
-    os.system(f"{chromium_exec} --headless --disable-gpu --print-to-pdf={print_path} --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
+    os.system(f"{chromium_exec} --no-sandbox --headless --disable-gpu --print-to-pdf={print_path} --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
 
     pass
 

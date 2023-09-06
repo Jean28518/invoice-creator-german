@@ -46,7 +46,6 @@ bash build-bundle.sh
 It uses the bundle.zip of the release specified in the .yml file
 
 ```bash
-flatpak install runtime/org.freedesktop.Sdk.Extension.texlive/x86_64/22.08
 flatpak-builder build-dir de.linuxguides.RechnungsAssistent.yml  --user --force-clean --install
 flatpak run de.linuxguides.RechnungsAssistent
 #flatpak --filesystem=host run de.linuxguides.RechnungsAssistent # For access to all files

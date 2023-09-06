@@ -2,32 +2,25 @@ app-id: de.linuxguides.RechnungsAssistent
 runtime: org.freedesktop.Platform
 runtime-version: '22.08'
 sdk: org.freedesktop.Sdk
-# add-extensions:
-#   org.freedesktop.Sdk.Extension.texlive:
-#     version: 22.08
-#     directory: texlive # this is relative to /app
-#     no-autodownload: true
 
 command: rechnungs-assistent.sh
 modules:
   - name: rechnungs-assistent
     buildsystem: simple
     build-commands:
-      - install -D generator.py /app/bin/generator.py
+      - install -D generator-html.py /app/bin/generator-html.py
       - install -D invoice /app/bin/invoice
       - install -D rechnungs-assistent.sh /app/bin/rechnungs-assistent.sh
-      - install -D runner.py /app/bin/runner.py
       - cp -r data /app/bin/data
-      - cp -r latex /app/bin/latex
+      - cp -r html /app/bin/html
       - cp -r lib /app/bin/lib
+      - cp -r chromium /app/bin/chromium
     sources:
       - type: archive
-        url: https://github.com/Jean28518/invoice-creator-german/releases/download/v0.1.3/rechnungs-assistent-bundle.zip
-        sha256: ee6fa150b6aab9495b816716fd69dbd786dd4e26777cb3786d2dc3cef26d8da3
+        url: https://github.com/Jean28518/invoice-creator-german/releases/download/v0.2.0/rechnungs-assistent-bundle-0.2.0.zip
+        sha256: 1e99c33b5c1700d95d907a9b7bbecb0c7f6bb9c32aafe2808c42b3b66c54c172
 finish-args:
   - "--socket=fallback-x11"
   - "--device=dri"
   - "--share=ipc"
   - "--filesystem=home"
-  - "--env=TEXMFCACHE=$XDG_CACHE_HOME"
-  - "--env=PATH=/app/texlive/bin/x86_64-linux:/app/texlive/bin/aarch64-linux:/app/bin:/usr/bin # required to find texlive binaries"
