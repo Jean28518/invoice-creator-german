@@ -1,3 +1,4 @@
 *.deb
-rechnungs-assistent-bundle.zip
+rechnungs-assistent-bundle*
+chrome-linux.zip
 .flatpak-builder
