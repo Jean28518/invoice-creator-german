@@ -1,6 +1,6 @@
 Package: rechnungs-assistent
-Version: 0.1.1
-Depends: texlive-latex-recommended, texlive-lang-german
+Version: 0.2.0
+Depends: chromium | chromium-browser
 Maintainer: Jean28518
 Architecture: amd64
 Hompage: https://www.linuxguides.de/

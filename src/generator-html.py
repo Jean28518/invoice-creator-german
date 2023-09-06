@@ -334,7 +334,15 @@ def main():
         print("Dry run. Not saving the pdf to the invoice Dir.")
         print_path = f"{cache_dir}/Rechnung.pdf"
 
-    os.system(f"chromium --headless --disable-gpu --print-to-pdf={print_path} --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
+    # Check if chromium folder is present next to the script
+    chromium_exec = ""
+    if os.path.exists(f"{current_dir}/chromium"):
+        chromium_exec = f"{current_dir}/chromium/chrome"
+    else:
+        chromium_exec = "chromium"
+
+
+    os.system(f"{chromium_exec} --headless --disable-gpu --print-to-pdf={print_path} --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
 
     pass
 

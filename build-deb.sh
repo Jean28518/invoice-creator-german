@@ -10,9 +10,8 @@ cp version src/build/linux/x64/release/bundle/
 # Prepare deb files for packaging
 mkdir -p deb/usr/lib/rechnungs-assistent/
 cp -r src/build/linux/x64/release/bundle/* deb/usr/lib/rechnungs-assistent/
-cp src/generator.py deb/usr/lib/rechnungs-assistent/
-cp src/runner.py deb/usr/lib/rechnungs-assistent/
-cp -r src/latex deb/usr/lib/rechnungs-assistent/
+cp src/generator-html.py deb/usr/lib/rechnungs-assistent/
+cp -r src/html deb/usr/lib/rechnungs-assistent/
 
 # mkdir -p deb/usr/share/icons/hicolor/scalable/apps/
 # cp rechnungs-assistent.svg deb/usr/share/icons/hicolor/scalable/apps/
