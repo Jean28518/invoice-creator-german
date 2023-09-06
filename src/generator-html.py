@@ -322,8 +322,10 @@ def main():
     if args.logo != "":
         if not os.path.exists(args.logo):
             print(f'Error: Could not open logo file: "{args.logo}"')
-            sys.exit(1)
-        os.system(f"cp {args.logo} {cache_dir}/logo.png")
+            # Copy the default logo
+            os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
+        else:
+            os.system(f"cp {args.logo} {cache_dir}/logo.png")
     else:
         # Copy the default logo
         os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
