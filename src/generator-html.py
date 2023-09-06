@@ -41,6 +41,32 @@ def get_all_lines_from_file(file_path):
         return f.readlines()
 
 
+def is_key_present(csv_lines, key):
+    for line in csv_lines:
+        if line.split(";")[0] == key:
+            return True
+    return False
+
+
+# Returns the second csv field.
+def get_value(csv_lines, key):
+    for line in csv_lines:
+        if line.split(";")[0] == key:
+            return line.split(";")[1]
+    return ""
+
+
+def convert_to_euro_string(value):
+    value = str(round(float(value), 2))
+    if value.find(".") == -1:
+        value += ",00"
+    value = value.replace(".", ",")
+    # If value ends only with one digit, add a 0
+    if value[len(value) - 2] == ",":
+        value += "0"
+    return value + " €"
+    
+
 def main():
     # get home directory
     home = os.path.expanduser("~")
@@ -94,7 +120,7 @@ def main():
     parser.add_argument('--logo', help='Path to the logo. Default: logo.png', default='')
 
     # dry run
-    parser.add_argument('--dryRun', help='Dry run. Do not generate the pdf.', action='store_true')
+    parser.add_argument('--dryRun', help='Dry run. Do not save the pdf to the invoice Dir.', action='store_true')
 
     # Path to the invoice directory structure (rechnungen/currentyear/currentmonth)
     parser.add_argument('--invoiceDir', help='Path to the invoice directory structure. Default: invoices', default=f'{home}/Dokumente/Rechnungen/')
@@ -181,13 +207,13 @@ def main():
     #   </tr>
     table_html = ""
     for article in articles:
-        table_html += f'<tr><td class="invoice-item-name">{article[0]}</td><td>{article[1]} €</td><td>{article[2]}</td><td>{float(article[1]) * float(article[2])} €</td></tr>\n'
+        table_html += f'<tr><td class="invoice-item-name">{article[0]}</td><td>{convert_to_euro_string(article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(float(article[1]) * float(article[2]))}</td></tr>\n'
 
     for expense in expenses:
-        table_html += f'<tr><td class="invoice-item-name">{expense[0]}</td><td> - </td><td> - </td><td>{expense[1]} €</td></tr>\n'
+        table_html += f'<tr><td class="invoice-item-name">{expense[0]}</td><td> - </td><td> - </td><td>{convert_to_euro_string(expense[1])}</td></tr>\n'
 
     for discount in discounts:
-        table_html += f'<tr><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>-{discount[1]} €</td></tr>\n'
+        table_html += f'<tr><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>- {convert_to_euro_string(discount[1])}</td></tr>\n'
     
     # Calculate sum
     sum_netto = 0
@@ -205,6 +231,51 @@ def main():
     vat_sum = sum_netto * (vat / 100)
     sum_brutto = sum_netto + vat_sum
 
+
+    # Generate html for sender info
+    sen_info_description = ""
+    sen_info_data = ""
+    if is_key_present(template_lines, "SEN-NAME") and is_key_present(template_lines, "SEN-STREET") and is_key_present(template_lines, "SEN-CITY"):
+        sen_info_description += "Anschrift <br> <br> <br> <br>"
+        sen_name = get_value(template_lines, "SEN-NAME")
+        sen_street = get_value(template_lines, "SEN-STREET")
+        sen_zip = get_value(template_lines, "SEN-ZIP")
+        sen_city = get_value(template_lines, "SEN-CITY")
+        sen_info_data += f"{sen_name} <br> {sen_street} <br> {sen_zip} {sen_city} <br> <br>"
+    if is_key_present(template_lines, "SEN-EMAIL"):
+        sen_info_description += "E-Mail <br>"
+        sen_email = get_value(template_lines, "SEN-EMAIL")
+        sen_info_data += f"<a style=\"color: grey; text-decoration: none;\" href=\"mailto:{sen_email}\">{sen_email}</a> <br>"
+    if is_key_present(template_lines, "SEN-PHONE"):
+        sen_info_description += "Telefon <br>"
+        sen_phone = get_value(template_lines, "SEN-PHONE")
+        sen_info_data += f"<a style=\"color: grey; text-decoration: none;\" href=\"tel:{sen_phone}\">{sen_phone}</a> <br>"
+    if is_key_present(template_lines, "SEN-WEBSITE"):
+        sen_info_description += "Website <br>"
+        sen_website = get_value(template_lines, "SEN-WEBSITE")
+        sen_info_data += f"<a style=\"color: grey; text-decoration: none;\" href=\"{sen_website}\">{sen_website}</a> <br>"
+    sen_info_description += "<br>"
+    sen_info_data += "<br>"
+    if is_key_present(template_lines, "SEN-TAX-ID"):
+        sen_info_description += "Ust-IdNr. <br>"
+        sen_tax_id = get_value(template_lines, "SEN-TAX-ID")
+        sen_info_data += f"{sen_tax_id} <br>"
+    sen_info_description += "<br>"
+    sen_info_data += "<br>"
+    if is_key_present(template_lines, "MONEY-INSTITUTE"):
+        sen_info_description += "Institut <br>"
+        sen_money_institute = get_value(template_lines, "MONEY-INSTITUTE")
+        sen_info_data += f"{sen_money_institute} <br>"
+    if is_key_present(template_lines, "IBAN"):
+        sen_info_description += "IBAN <br>"
+        sen_iban = get_value(template_lines, "IBAN")
+        sen_info_data += f"{sen_iban} <br>"
+    if is_key_present(template_lines, "BIC"):
+        sen_info_description += "BIC <br>"
+        sen_bic = get_value(template_lines, "BIC")
+        sen_info_data += f"{sen_bic} <br>"
+    
+
     # Replace all keys with the values (GENERATE THE HTML FILE)
     for i in range(len(lines)):
         # Template data
@@ -214,11 +285,8 @@ def main():
 
         # Customer data
         for j in range(len(argkeys_customer)):
-            if type(args.__dict__[argkeys_customer[j][0]]) == str:
+            if type(args.__dict__[argkeys_customer[j][0]]) == str and args.__dict__[argkeys_customer[j][0]] != "":
                 lines[i] = lines[i].replace("#!" + argkeys_customer[j][3], args.__dict__[argkeys_customer[j][0]])
-            else:
-                # Save default value
-                lines[i] = lines[i].replace("#!" + argkeys_customer[j][3], argkeys_customer[j][2])
 
         # Date
         lines[i] = lines[i].replace("#!DATE", date)
@@ -228,13 +296,22 @@ def main():
         lines[i] = lines[i].replace("#!INVOICE-NUM", invoice_number)
 
         # Sum with VAT
-        lines[i] = lines[i].replace("#!SUM-WITHOUT-VAT", str(round(sum_netto, 2)) + " €")
+        lines[i] = lines[i].replace("#!SUM-WITHOUT-VAT", convert_to_euro_string(sum_netto))
         lines[i] = lines[i].replace("#!VAT-PERCENT", str(vat) + " %")
-        lines[i] = lines[i].replace("#!VAT-ADDITION", str(round(vat_sum, 2)) + " €")
-        lines[i] = lines[i].replace("#!SUM-WITH-VAT", str(round(sum_brutto, 2)) + " €")
+        lines[i] = lines[i].replace("#!VAT-ADDITION", convert_to_euro_string(vat_sum))
+        lines[i] = lines[i].replace("#!SUM-WITH-VAT", convert_to_euro_string(sum_brutto))
 
         # Table
         lines[i] = lines[i].replace("#!ITEMS", table_html)
+
+        # Sender info
+        lines[i] = lines[i].replace("#!SEN-INFO-DESCRIPTION", sen_info_description)
+        lines[i] = lines[i].replace("#!SEN-INFO-DATA", sen_info_data)
+
+    # Remove all lines that have a #!
+    for i in range(len(lines)):
+        if lines[i].find("#!") != -1:
+            lines[i] = ""
 
     # Save .html file to cache
     f = open(f"{cache_dir}/invoice.html", "w")
@@ -252,8 +329,12 @@ def main():
         os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
 
 
+    print_path = f"{invoice_dir}/Rechnung-{invoice_number}.pdf"
+    if args.dryRun:
+        print("Dry run. Not saving the pdf to the invoice Dir.")
+        print_path = f"{cache_dir}/Rechnung.pdf"
 
-    os.system(f"chromium --headless --disable-gpu --print-to-pdf={invoice_dir}/Rechnung-{invoice_number}.pdf --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
+    os.system(f"chromium --headless --disable-gpu --print-to-pdf={print_path} --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
 
     pass
 

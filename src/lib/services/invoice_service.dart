@@ -12,10 +12,6 @@ import 'package:invoice/widgets/mint_y.dart';
 class InvoiceService {
   static List<InvoiceElement> invoiceElements = [];
 
-  static void init() {
-    keepRunnerWorking();
-  }
-
   // CURRENT CUSTOMER DATA
 
   static String currentCompanyName = "";
@@ -68,8 +64,9 @@ class InvoiceService {
     bool preview = false,
   }) async {
     var arguments = [
-      "generator.py",
-      "--dryRun",
+      "generator-html.py",
+      "--template",
+      "${getConfigDirectory()}/template.csv",
       "--customerCompany",
       currentCompanyName,
       "--customerName",
@@ -81,6 +78,10 @@ class InvoiceService {
       "--customerCity",
       currentCustomerCity,
     ];
+
+    if (preview) {
+      arguments.add("--dryRun");
+    }
 
     // Add articles
     var articles = invoiceElements
@@ -122,22 +123,22 @@ class InvoiceService {
       arguments.add(logoPath);
     }
 
+    // Add vat rate
+    String vatRate = ConfigHandler.getValueUnsafe("defaultVatRate", "0");
+    if (vatRate != "") {
+      arguments.add("--vat");
+      arguments.add(vatRate);
+    }
+
     clearInvoiceElements();
 
     var result = await Process.run("/usr/bin/python3", arguments);
 
-    String invoiceNumber = result.stdout
-        .toString()
-        .split("\n")
-        .where((element) => element.startsWith("invoice-number: "))
-        .first
-        .split(" ")
-        .last;
+    print(result.stdout);
+    print(result.stderr);
 
-    await Process.run("touch", ["/tmp/rechnungs-assistent/do"]);
-
-    // Wait for file to be generated
-    await Future.delayed(const Duration(milliseconds: 3000));
+    // // Wait for file to be generated
+    // await Future.delayed(const Duration(milliseconds: 3000));
 
     // Get current month and year
     var now = DateTime.now();
@@ -145,24 +146,9 @@ class InvoiceService {
     String year = now.year.toString();
 
     if (preview) {
-      Process.run("xdg-open", ["${getCacheDirectory()}/latex/_main.pdf"]);
+      Process.run("xdg-open", ["${getCacheDirectory()}/Rechnung.pdf"]);
     } else {
-      await Process.run("mv", [
-        "${getCacheDirectory()}/latex/_main.pdf",
-        "${getInvoicesDirectory()}/$year/$month/Rechnung-$invoiceNumber.pdf"
-      ]);
       Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
     }
-  }
-
-  /// Called by [init] to keep the runner working
-  static void keepRunnerWorking() async {
-    // Call the same function again after 25 seconds
-    Timer.periodic(
-      const Duration(seconds: 25),
-      (timer) {
-        Process.run("touch", ["/tmp/rechnungs-assistent/live"]);
-      },
-    );
   }
 }

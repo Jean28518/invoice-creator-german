@@ -6,17 +6,17 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
   String description = '';
   String defaultValue = '';
   String value = '';
-  String latexKey = '';
+  String csvKey = '';
   bool displaySaveButton;
 
   TemplateSettingWidgetTextLine(
       {super.key,
       required this.description,
       required this.defaultValue,
-      required this.latexKey,
+      required this.csvKey,
       this.displaySaveButton = true}) {
-    if (TemplateSettingService.templateSettings[latexKey] != null) {
-      value = TemplateSettingService.templateSettings[latexKey]!;
+    if (TemplateSettingService.templateSettings[csvKey] != null) {
+      value = TemplateSettingService.templateSettings[csvKey]!;
     }
   }
 
@@ -43,7 +43,7 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
           hintText: defaultValue,
           onChanged: (String newValue) {
             value = newValue;
-            TemplateSettingService.templateSettings[latexKey] =
+            TemplateSettingService.templateSettings[csvKey] =
                 value.replaceAll("\n", " ");
           },
           controller: controller,
@@ -62,7 +62,7 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
                 onPressed: () {
                   // Replace new line with spaces because it will otherwise crash the .latex file
                   value = value.replaceAll("\n", " ");
-                  TemplateSettingService.saveValue(latexKey, value);
+                  TemplateSettingService.saveValue(csvKey, value);
                   controller.text = value;
                 },
               )

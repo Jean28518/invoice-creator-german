@@ -16,10 +16,10 @@ class TemplateSettingService {
 
   static List<String> _getLinesFromSettingsFile() {
     // if the template file does not exist, copy it from latex/template.tex
-    File templateFile = File('${getConfigDirectory()}/template.tex');
+    File templateFile = File('${getConfigDirectory()}/template.csv');
     if (!templateFile.existsSync()) {
-      File('latex/template.tex.example')
-          .copySync('${getConfigDirectory()}/template.tex');
+      File('html/template.csv.example')
+          .copySync('${getConfigDirectory()}/template.csv');
     }
 
     // read the template file in a list of lines
@@ -34,17 +34,10 @@ class TemplateSettingService {
 
     // Read the lines and store the settings in the templateSettings map
     for (String line in templateLines) {
-      if (line.startsWith(r'\newcommand{')) {
-        // Remove the latex comment from the line
-        line = line.split('%')[0];
-        line.trim();
-        // Remove the \newcommand{ and the } from the line
-        String lineWithoutNewcommand = line.substring(12, line.length - 1);
-        // Split the line at the }{ to get the key and the value
-        List<String> lineSplit = lineWithoutNewcommand.split("}{");
-        lineSplit[0] = lineSplit[0].replaceAll('\\', "");
-        // Store the key and the value in the templateSettings map
-        templateSettings[lineSplit[0]] = lineSplit[1];
+      line = line.trim();
+      List<String> elements = line.split(";");
+      if (elements.length == 2) {
+        templateSettings[elements[0]] = elements[1];
       }
     }
   }
@@ -59,36 +52,25 @@ class TemplateSettingService {
     bool settingSet = false;
     for (int i = 0; i < templateLines.length; i++) {
       String line = templateLines[i];
-      if (line.startsWith(r'\newcommand{')) {
-        // Remove the latex comment from the line
-        line = line.split('%')[0];
-        line.trim();
-        // Remove the \newcommand{ and the } from the line
-        String lineWithoutNewcommand = line.substring(12, line.length - 1);
-        // Split the line at the }{ to get the key and the value
-        List<String> lineSplit = lineWithoutNewcommand.split("}{");
-        lineSplit[0] = lineSplit[0].replaceAll('\\', "");
-        // Check if the key is the same as the key we are looking for
-        if (lineSplit[0] == key) {
-          if (value.isEmpty) {
-            // If the key is empty, remove the line
-            templateLines.removeAt(i);
-            i--;
-            settingSet = true;
-            continue;
-          }
-          // If the key is the same, replace the value
-          templateLines[i] = r'\newcommand{\' + key + r'}{' + value + r'}';
+      if (line.trim().startsWith("$key;")) {
+        if (value.trim() == "") {
+          // If the value is empty, delete the setting
+          templateLines.removeAt(i);
           settingSet = true;
+          break;
         }
+        // If the setting is already set, replace it
+        templateLines[i] = "$key;$value";
+        settingSet = true;
+        break;
       }
     }
     if (!settingSet) {
       // If the setting is not set, add it to the end of the file
-      templateLines.add(r'\newcommand{\' + key + r'}{' + value + r'}');
+      templateLines.add("$key;$value");
     }
     // Write the templateLines to the template file
-    File templateFile = File('${getConfigDirectory()}/template.tex');
+    File templateFile = File('${getConfigDirectory()}/template.csv');
     templateFile.writeAsStringSync(templateLines.join('\n'));
   }
 }

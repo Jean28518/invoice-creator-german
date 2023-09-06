@@ -40,74 +40,72 @@ class TemplateSettingsPage extends StatelessWidget {
         TemplateSettingWidgetTextLine(
             description: "Ihr Name",
             defaultValue: "Max Mustermann",
-            latexKey: "senderName"),
+            csvKey: "SEN-NAME"),
         TemplateSettingWidgetTextLine(
             description: "Straße",
             defaultValue: "Musterstraße 12",
-            latexKey: "senderStreet"),
+            csvKey: "SEN-STREET"),
         TemplateSettingWidgetTextLine(
-            description: "PLZ", defaultValue: "12345", latexKey: "senderZIP"),
+            description: "PLZ", defaultValue: "12345", csvKey: "SEN-ZIP"),
         TemplateSettingWidgetTextLine(
             description: "Stadt",
             defaultValue: "Musterstadt",
-            latexKey: "senderCity"),
+            csvKey: "SEN-CITY"),
         TemplateSettingWidgetTextLine(
             description: "Telefon",
             defaultValue: "+49 (0)123 456789",
-            latexKey: "senderTelephone"),
-        TemplateSettingWidgetTextLine(
-            description: "Mobil",
-            defaultValue: "+49 (0)123 456789",
-            latexKey: "senderMobilephone"),
+            csvKey: "SEN-PHONE"),
         TemplateSettingWidgetTextLine(
           description: "E-Mail",
           defaultValue: "",
-          latexKey: "senderEmail",
+          csvKey: "SEN-EMAIL",
         ),
         TemplateSettingWidgetTextLine(
             description: "Webseite",
             defaultValue: "www.domain.com",
-            latexKey: "senderWeb"),
+            csvKey: "SEN-WEBSITE"),
         TemplateSettingWidgetTextLine(
             description: "Bank",
             defaultValue: "DAB-Bank",
-            latexKey: "accountBankName"),
+            csvKey: "MONEY-INSTITUTE"),
         TemplateSettingWidgetTextLine(
             description: "IBAN",
             defaultValue: "DE00 3006 0088 1234 5678 90",
-            latexKey: "accountIBAN"),
+            csvKey: "IBAN"),
         TemplateSettingWidgetTextLine(
-            description: "BIC",
-            defaultValue: "DRTTZZUUXXX",
-            latexKey: "accountBIC"),
+            description: "BIC", defaultValue: "DRTTZZUUXXX", csvKey: "BIC"),
         TemplateSettingWidgetTextLine(
             description: "USt-IdNr.",
             defaultValue: "DE123456789",
-            latexKey: "taxID"),
+            csvKey: "SEN-TAX-ID"),
         TemplateSettingWidgetTextLine(
           description: "Anrede",
           defaultValue: "Sehr geehrte Damen und Herren,",
-          latexKey: "invoiceSalutation",
+          csvKey: "SALUTATION",
         ),
         TemplateSettingWidgetTextLine(
             description: "Rechnungstext",
             defaultValue:
                 "bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\\invoiceReference) bis zum \\payDate \\ auf das angegebene Konto ein.",
-            latexKey: "invoiceText"),
+            csvKey: "MESSAGE"),
         TemplateSettingWidgetTextLine(
           description: "Rechnungshinweis",
           defaultValue:
               "Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.",
-          latexKey: "invoiceHint",
+          csvKey: "HINT",
         ),
         TemplateSettingWidgetTextLine(
             description: "Rechnungsabschluss",
             defaultValue: "Mit freundlichen Grüßen",
-            latexKey: "invoiceClosing"),
+            csvKey: "CLOSING"),
         SettingWidgetTextLine(
             description: "Absoluter Pfad zum Logo\n(.png, bis 150px)",
             defaultValue: "/home/benutzer/Bilder/logo.png",
             configKey: "logoPath"),
+        SettingWidgetTextLine(
+            description: "Standard Steuersatz (in %)",
+            defaultValue: "0",
+            configKey: "defaultVatRate"),
       ],
       bottom: Row(
         mainAxisAlignment: MainAxisAlignment.center,

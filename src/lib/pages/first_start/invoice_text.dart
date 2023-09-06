@@ -26,27 +26,27 @@ class InvoiceTextEnteringPage extends StatelessWidget {
         TemplateSettingWidgetTextLine(
           description: "Anrede",
           defaultValue: "Sehr geehrte Damen und Herren,",
-          latexKey: "invoiceSalutation",
+          csvKey: "invoiceSalutation",
           displaySaveButton: false,
         ),
         TemplateSettingWidgetTextLine(
           description: "Rechnungstext",
           defaultValue:
               "bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\\invoiceReference) bis zum \\payDate \\ auf das angegebene Konto ein.",
-          latexKey: "invoiceText",
+          csvKey: "invoiceText",
           displaySaveButton: false,
         ),
         TemplateSettingWidgetTextLine(
           description: "Rechnungshinweis",
           defaultValue:
               "Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.",
-          latexKey: "invoiceHint",
+          csvKey: "invoiceHint",
           displaySaveButton: false,
         ),
         TemplateSettingWidgetTextLine(
           description: "Rechnungsabschluss",
           defaultValue: "Mit freundlichen Grüßen",
-          latexKey: "invoiceClosing",
+          csvKey: "invoiceClosing",
           displaySaveButton: false,
         ),
         const SizedBox(
