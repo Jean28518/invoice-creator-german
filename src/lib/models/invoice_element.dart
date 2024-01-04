@@ -15,6 +15,9 @@ class InvoiceElement {
   /// only used by expense and discount
   double price = 0.0;
 
+  /// The "real" description. Used for articles
+  String summary = "";
+
   /// Constructor
   InvoiceElement({
     required this.type,
@@ -22,6 +25,7 @@ class InvoiceElement {
     this.pricePerUnit = 0.0,
     this.amount = 0.0,
     this.price = 0.0,
+    this.summary = "",
   }) {
     id = idCounter++;
   }

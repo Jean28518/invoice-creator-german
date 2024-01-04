@@ -242,17 +242,20 @@ class MintYPage extends StatelessWidget {
   late Widget customContentElement;
   late bool centerContentElements;
   Widget? bottom;
+  Widget? headerContentRight;
 
   MintYPage(
       {String title = "",
       List<Widget> contentElements = const [],
       Widget customContentElement = const Text(""),
       Widget? bottom,
+      Widget? headerContentRight,
       this.centerContentElements = true}) {
     this.title = title;
     this.contentElements = contentElements;
     this.customContentElement = customContentElement;
     this.bottom = bottom;
+    this.headerContentRight = headerContentRight;
   }
 
   final ScrollController scrollController = ScrollController();
@@ -276,12 +279,15 @@ class MintYPage extends StatelessWidget {
               decoration: MintY.colorfulBackground,
               padding: const EdgeInsets.all(26.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: headerContentRight != null
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.start,
                 children: [
                   Text(
                     title,
                     style: MintY.heading2White,
                   ),
+                  headerContentRight != null ? headerContentRight! : Container()
                 ],
               ),
             ),

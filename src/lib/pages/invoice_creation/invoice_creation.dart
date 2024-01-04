@@ -24,18 +24,17 @@ class InvoiceCreationPage extends StatelessWidget {
     return MintYPage(
       title: "Rechnung erstellen",
       centerContentElements: false,
+      headerContentRight: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Vorlage:", style: MintY.heading3White),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: TemplateSelectorWidget(),
+          ),
+        ],
+      ),
       contentElements: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Vorlage:", style: Theme.of(context).textTheme.headlineSmall),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: TemplateSelectorWidget(),
-            ),
-          ],
-        ),
-        Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider()),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,6 +63,7 @@ class InvoiceCreationPage extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.3 - 20,
@@ -278,9 +278,6 @@ class InvoiceElementCreationWidget extends StatelessWidget {
     return Column(
       children: [
         ArticleCreationWidget(),
-        SizedBox(
-          height: 10,
-        ),
         ExpenseCreationWidget(),
         DiscountCreationWidget()
       ],
@@ -303,67 +300,72 @@ class DiscountCreationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 250,
-          child: Text(
-            "Neuer Rabatt",
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Expanded(
-          child: MintYTextField(
-            hintText: "Rabattbeschreibung",
-            width: 400,
-            onChanged: (value) {
-              discountName = value;
-            },
-            controller: discountNameController,
-          ),
-        ),
-        MintYTextField(
-          hintText: "Preisnachlass in €",
-          width: 200,
-          onChanged: (value) {
-            discountPrice = parseDouble(value);
-          },
-          controller: discountPriceController,
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: MintYButton(
-            text: Icon(
-              Icons.add,
-              color: Colors.white,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Container(
+              width: 250,
+              child: Text(
+                "Neuer Rabatt",
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
             ),
-            color: MintY.currentColor,
-            onPressed: () {
-              // if the textfields are empty, return
-              if (discountName == "" || discountPrice == 0) {
-                return;
-              }
+            Expanded(
+              child: MintYTextField(
+                hintText: "Rabattbeschreibung",
+                width: 400,
+                onChanged: (value) {
+                  discountName = value;
+                },
+                controller: discountNameController,
+              ),
+            ),
+            MintYTextField(
+              hintText: "Preisnachlass in €",
+              width: 200,
+              onChanged: (value) {
+                discountPrice = parseDouble(value);
+              },
+              controller: discountPriceController,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: MintYButton(
+                text: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                color: MintY.currentColor,
+                onPressed: () {
+                  // if the textfields are empty, return
+                  if (discountName == "" || discountPrice == 0) {
+                    return;
+                  }
 
-              // Add the invoice element to the invoice element list
-              InvoiceService.invoiceElements.add(InvoiceElement(
-                  type: InvoiceElementType.discount,
-                  name: discountName,
-                  price: discountPrice));
+                  // Add the invoice element to the invoice element list
+                  InvoiceService.invoiceElements.add(InvoiceElement(
+                      type: InvoiceElementType.discount,
+                      name: discountName,
+                      price: discountPrice));
 
-              // Clear the textfields
-              discountNameController.clear();
-              discountPriceController.clear();
+                  // Clear the textfields
+                  discountNameController.clear();
+                  discountPriceController.clear();
 
-              // Update the invoice element table with the key
-              final state = invoiceElementTableWidgetKey.currentState;
-              if (state != null) {
-                state.update();
-              }
-            },
-          ),
+                  // Update the invoice element table with the key
+                  final state = invoiceElementTableWidgetKey.currentState;
+                  if (state != null) {
+                    state.update();
+                  }
+                },
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -383,70 +385,75 @@ class ExpenseCreationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 250,
-          child: Text(
-            "Neue Aufwendung",
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Expanded(
-          child: MintYTextField(
-            hintText: "Aufwendungsbeschreibung",
-            width: 500,
-            onChanged: (p0) => {
-              expenseName = p0,
-            },
-            controller: expenseNameController,
-          ),
-        ),
-        MintYTextField(
-          hintText: "Preis",
-          width: 100,
-          onChanged: (p0) => {
-            expensePrice = parseDouble(p0),
-          },
-          controller: expensePriceController,
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: MintYButton(
-            text: Icon(
-              Icons.add,
-              color: Colors.white,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Container(
+              width: 250,
+              child: Text(
+                "Neue Aufwendung",
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
             ),
-            color: MintY.currentColor,
-            onPressed: () {
-              // if expense is 0 or name is empty, do nothing
-              if (expensePrice == 0 || expenseName == "") {
-                return;
-              }
-
-              // add the expense to the invoice elements
-              InvoiceService.invoiceElements.add(
-                InvoiceElement(
-                  name: expenseName,
-                  price: expensePrice,
-                  type: InvoiceElementType.expense,
+            Expanded(
+              child: MintYTextField(
+                hintText: "Aufwendungsbeschreibung",
+                width: 500,
+                onChanged: (p0) => {
+                  expenseName = p0,
+                },
+                controller: expenseNameController,
+              ),
+            ),
+            MintYTextField(
+              hintText: "Preis",
+              width: 100,
+              onChanged: (p0) => {
+                expensePrice = parseDouble(p0),
+              },
+              controller: expensePriceController,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: MintYButton(
+                text: Icon(
+                  Icons.add,
+                  color: Colors.white,
                 ),
-              );
+                color: MintY.currentColor,
+                onPressed: () {
+                  // if expense is 0 or name is empty, do nothing
+                  if (expensePrice == 0 || expenseName == "") {
+                    return;
+                  }
 
-              // clear the textfields
-              expenseNameController.clear();
-              expensePriceController.clear();
+                  // add the expense to the invoice elements
+                  InvoiceService.invoiceElements.add(
+                    InvoiceElement(
+                      name: expenseName,
+                      price: expensePrice,
+                      type: InvoiceElementType.expense,
+                    ),
+                  );
 
-              // update the invoice element table widget
-              final state = invoiceElementTableWidgetKey.currentState;
-              if (state != null) {
-                state.update();
-              }
-            },
-          ),
+                  // clear the textfields
+                  expenseNameController.clear();
+                  expensePriceController.clear();
+
+                  // update the invoice element table widget
+                  final state = invoiceElementTableWidgetKey.currentState;
+                  if (state != null) {
+                    state.update();
+                  }
+                },
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -459,160 +466,190 @@ class ArticleCreationWidget extends StatelessWidget {
   String articleName = "";
   double articlePricePerUnit = 0.0;
   double articleAmount = 0.0;
+  String summary = "";
 
   TextEditingController articleNameController = TextEditingController();
   TextEditingController articlePricePerUnitController = TextEditingController();
   TextEditingController articleAmountController = TextEditingController();
+  TextEditingController articleSummaryController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 250,
-          child: Text(
-            "Artikel",
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              Row(
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Container(
+              width: 250,
+              child: Text(
+                "Artikel",
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Expanded(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: MintYTextField(
-                      hintText: "Artikelbeschreibung",
-                      width: 300,
-                      onChanged: (p0) {
-                        articleName = p0;
-                      },
-                      controller: articleNameController,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MintYTextField(
+                          hintText: "Artikelname",
+                          width: 300,
+                          onChanged: (p0) {
+                            articleName = p0;
+                          },
+                          controller: articleNameController,
+                        ),
+                      ),
+                      MintYTextField(
+                        hintText: "Preis pro Einheit",
+                        width: 200,
+                        onChanged: (p0) {
+                          articlePricePerUnit = parseDouble(p0);
+                        },
+                        controller: articlePricePerUnitController,
+                      ),
+                    ],
                   ),
-                  MintYTextField(
-                    hintText: "Preis pro Einheit",
-                    width: 200,
-                    onChanged: (p0) {
-                      articlePricePerUnit = parseDouble(p0);
-                    },
-                    controller: articlePricePerUnitController,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MintYTextField(
+                          hintText: "Artikelbeschreibung",
+                          maxLines: 4,
+                          width: 100,
+                          onChanged: (p0) {
+                            summary = p0;
+                          },
+                          controller: articleSummaryController,
+                        ),
+                      ),
+                    ],
                   ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MintYSelectionDialogWithFilter(
+                        selectionCallback: (string) {
+                          Article article = ArticleService.articles.firstWhere(
+                              (element) =>
+                                  "${element.description}, ${element.pricePerUnit}" ==
+                                  string);
+                          articleNameController.text = article.description;
+                          articleName = article.description;
+                          articlePricePerUnitController.text =
+                              article.pricePerUnit;
+                          articlePricePerUnit =
+                              parseDouble(article.pricePerUnit);
+
+                          if (article.amount != "") {
+                            articleAmountController.text = article.amount;
+                            articleAmount = parseDouble(article.amount);
+                          }
+                          articleSummaryController.text = article.summary;
+                          summary = article.summary;
+                        },
+                        deleteCallback: (string) {
+                          Article article = ArticleService.articles.firstWhere(
+                              (element) =>
+                                  "${element.description}, ${element.pricePerUnit}" ==
+                                  string);
+                          ArticleService.articles.remove(article);
+                          ArticleService.save();
+                        },
+                        items: List.generate(ArticleService.articles.length,
+                            (index) {
+                          Article article = ArticleService.articles[index];
+                          return "${article.description}, ${article.pricePerUnit}";
+                        }),
+                        buttonText: "Artikel auswählen",
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      MintYButtonNavigate(
+                        route: InvoiceCreationPage(),
+                        text: const Text(
+                          "Artikel speichern",
+                          style: MintY.heading5White,
+                        ),
+                        color: MintY.currentColor,
+                        onPressed: () {
+                          if (articleName == "") {
+                            return;
+                          }
+                          ArticleService.articles.add(Article(
+                              description: articleName,
+                              pricePerUnit: articlePricePerUnit.toString(),
+                              amount: articleAmount.toString()));
+                          ArticleService.save();
+                        },
+                      ),
+                    ],
+                  )
                 ],
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  MintYSelectionDialogWithFilter(
-                    selectionCallback: (string) {
-                      Article article = ArticleService.articles.firstWhere(
-                          (element) =>
-                              "${element.description}, ${element.pricePerUnit}" ==
-                              string);
-                      articleNameController.text = article.description;
-                      articleName = article.description;
-                      articlePricePerUnitController.text = article.pricePerUnit;
-                      articlePricePerUnit = parseDouble(article.pricePerUnit);
-                      if (article.amount != "") {
-                        articleAmountController.text = article.amount;
-                        articleAmount = parseDouble(article.amount);
-                      }
-                    },
-                    deleteCallback: (string) {
-                      Article article = ArticleService.articles.firstWhere(
-                          (element) =>
-                              "${element.description}, ${element.pricePerUnit}" ==
-                              string);
-                      ArticleService.articles.remove(article);
-                      ArticleService.save();
-                    },
-                    items:
-                        List.generate(ArticleService.articles.length, (index) {
-                      Article article = ArticleService.articles[index];
-                      return "${article.description}, ${article.pricePerUnit}";
-                    }),
-                    buttonText: "Artikel auswählen",
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  MintYButtonNavigate(
-                    route: InvoiceCreationPage(),
-                    text: const Text(
-                      "Artikel speichern",
-                      style: MintY.heading5White,
-                    ),
-                    color: MintY.currentColor,
-                    onPressed: () {
-                      if (articleName == "") {
-                        return;
-                      }
-                      ArticleService.articles.add(Article(
-                          description: articleName,
-                          pricePerUnit: articlePricePerUnit.toString(),
-                          amount: articleAmount.toString()));
-                      ArticleService.save();
-                    },
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-        Column(
-          children: [
-            Row(
+            ),
+            Column(
               children: [
-                MintYTextField(
-                  hintText: "Menge",
-                  width: 100,
-                  onChanged: (p0) {
-                    articleAmount = parseDouble(p0);
-                  },
-                  controller: articleAmountController,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: MintYButton(
-                    text: Icon(
-                      Icons.add,
-                      color: Colors.white,
+                Row(
+                  children: [
+                    MintYTextField(
+                      hintText: "Menge",
+                      width: 100,
+                      onChanged: (p0) {
+                        articleAmount = parseDouble(p0);
+                      },
+                      controller: articleAmountController,
                     ),
-                    color: MintY.currentColor,
-                    onPressed: () {
-                      // if amount or pricer per unit is zero or name is empty, do not add
-                      if (articleAmount == 0.0 ||
-                          articlePricePerUnit == 0.0 ||
-                          articleName == "") {
-                        return;
-                      }
-                      InvoiceService.invoiceElements.add(InvoiceElement(
-                          type: InvoiceElementType.article,
-                          name: articleName,
-                          amount: articleAmount,
-                          pricePerUnit: articlePricePerUnit));
-                      articleNameController.clear();
-                      articlePricePerUnitController.clear();
-                      articleAmountController.clear();
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: MintYButton(
+                        text: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        color: MintY.currentColor,
+                        onPressed: () {
+                          // if amount or pricer per unit is zero or name is empty, do not add
+                          if (articleAmount == 0.0 ||
+                              articlePricePerUnit == 0.0 ||
+                              articleName == "") {
+                            return;
+                          }
+                          InvoiceService.invoiceElements.add(InvoiceElement(
+                              type: InvoiceElementType.article,
+                              name: articleName,
+                              amount: articleAmount,
+                              pricePerUnit: articlePricePerUnit,
+                              summary: summary));
+                          articleNameController.clear();
+                          articlePricePerUnitController.clear();
+                          articleAmountController.clear();
+                          articleSummaryController.clear();
 
-                      // update the invoice element table widget
-                      final state = invoiceElementTableWidgetKey.currentState;
-                      if (state != null) {
-                        state.update();
-                      }
-                    },
-                  ),
+                          // update the invoice element table widget
+                          final state =
+                              invoiceElementTableWidgetKey.currentState;
+                          if (state != null) {
+                            state.update();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 140,
                 ),
               ],
             ),
-            SizedBox(
-              height: 35,
-            ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

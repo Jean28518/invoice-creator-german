@@ -98,7 +98,7 @@ def main():
 
 
     # Add article arguments with price, amount and description
-    parser.add_argument('--article', nargs='+', help='One or more articles. Format: --article "<description>;<pricePerUnit>;<amount>" "<description>;<pricePerUnit>;<amount>"')
+    parser.add_argument('--article', nargs='+', help='One or more articles. Format: --article "<description>;<pricePerUnit>;<amount>;<summary>" "<description>;<pricePerUnit>;<amount>;<summary>"')
     # Expense arguments
     parser.add_argument('--expense', nargs='+', help='One or more expenses. Format: --expense "<description>;<price>" "<description>;<price>"')
     # Discount
@@ -166,8 +166,8 @@ def main():
         for article_string in articles_string_list:
             # Parse the article
             segments = article_string.split(";")
-            if len(segments) != 3:
-                print(f'Error: Wrong format for article: "{article_string}". Use: --article "<description>;<pricePerUnit>;<amount>" "<description>;<pricePerUnit>;<amount>"')
+            if len(segments) != 4:
+                print(f'Error: Wrong format for article: "{article_string}". Use: --article "<description>;<pricePerUnit>;<amount>;<summary>" "<description>;<pricePerUnit>;<amount>;<summary>"')
                 sys.exit(1)
             articles.append(segments)
 
@@ -204,7 +204,10 @@ def main():
     #   </tr>
     table_html = ""
     for article in articles:
-        table_html += f'<tr><td class="invoice-item-name">{article[0]}</td><td>{convert_to_euro_string(article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(float(article[1]) * float(article[2]))}</td></tr>\n'
+        description = ""
+        if article[3] != "":
+            description = f'<br>{article[3]}'
+        table_html += f'<tr><td class="invoice-item-name"><strong>{article[0]}</strong>{description}</td><td>{convert_to_euro_string(article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(float(article[1]) * float(article[2]))}</td></tr>\n'
 
     for expense in expenses:
         table_html += f'<tr><td class="invoice-item-name">{expense[0]}</td><td> - </td><td> - </td><td>{convert_to_euro_string(expense[1])}</td></tr>\n'

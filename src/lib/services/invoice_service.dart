@@ -92,7 +92,8 @@ class InvoiceService {
     if (articles.isNotEmpty) {
       arguments.add("--article");
       for (var element in articles) {
-        String s = "${element.name};${element.pricePerUnit};${element.amount}";
+        String s =
+            "${element.name};${element.pricePerUnit};${element.amount};${element.summary}";
         arguments.add(s);
       }
     }

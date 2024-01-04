@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:invoice/models/template.dart';
 import 'package:invoice/services/template_service.dart';
+import 'package:invoice/widgets/mint_y.dart';
 
 class TemplateSelectorWidget extends StatefulWidget {
   const TemplateSelectorWidget({super.key});
@@ -14,6 +15,8 @@ class _TemplateSelectorWidgetState extends State<TemplateSelectorWidget> {
   Widget build(BuildContext context) {
     print(TemplateService.currentTemplate.templateName);
     return DropdownButton(
+        style: MintY.heading4White,
+        dropdownColor: MintY.currentColor,
         value: TemplateService.currentTemplate.templateName,
         items: TemplateService.templates
             .map((e) => DropdownMenuItem(

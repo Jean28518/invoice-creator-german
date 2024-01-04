@@ -18,10 +18,14 @@ class ArticleService {
     for (int i = 1; i < lines.length; i++) {
       String line = lines[i];
       List<String> lineSplit = line.split(";");
+      while (lineSplit.length < 4) {
+        lineSplit.add("");
+      }
       Article article = Article(
         description: lineSplit[0],
         pricePerUnit: lineSplit[1],
         amount: lineSplit[2],
+        summary: lineSplit[3],
       );
       articles.add(article);
     }
@@ -30,10 +34,10 @@ class ArticleService {
   static void save() {
     // save articles to .csv file in config folder
     File articleFile = File("${getInvoicesDirectory()}/data/articles.csv");
-    List<String> lines = ["description;pricePerUnit;amount"];
+    List<String> lines = ["description;pricePerUnit;amount;summary"];
     for (Article article in articles) {
       lines.add(
-          '${article.description};${article.pricePerUnit};${article.amount}');
+          '${article.description};${article.pricePerUnit};${article.amount};${article.summary}');
     }
     articleFile.writeAsStringSync(lines.join("\n"));
   }
