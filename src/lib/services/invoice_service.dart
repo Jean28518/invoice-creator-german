@@ -133,8 +133,6 @@ class InvoiceService {
       arguments.add(vatRate);
     }
 
-    clearInvoiceElements();
-
     var result = await Process.run("/usr/bin/python3", arguments);
 
     print(result.stdout);
@@ -155,6 +153,7 @@ class InvoiceService {
         opendInvoiceFolder = true;
         Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
       }
+      clearInvoiceElements();
     }
   }
 }
