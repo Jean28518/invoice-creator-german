@@ -10,6 +10,9 @@ import 'package:invoice/services/helpers.dart';
 import 'package:invoice/widgets/mint_y.dart';
 
 class InvoiceService {
+  /// If the folder was opened after invoice creation in the file manager
+  static bool opendInvoiceFolder = false;
+
   static List<InvoiceElement> invoiceElements = [];
 
   // CURRENT CUSTOMER DATA
@@ -148,7 +151,10 @@ class InvoiceService {
     if (preview) {
       Process.run("xdg-open", ["${getCacheDirectory()}/Rechnung.pdf"]);
     } else {
-      Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
+      if (opendInvoiceFolder == false) {
+        opendInvoiceFolder = true;
+        Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
+      }
     }
   }
 }
