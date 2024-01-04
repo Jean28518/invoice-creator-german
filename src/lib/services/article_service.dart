@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:invoice/datatypes/article.dart';
+import 'package:invoice/models/article.dart';
 import 'package:invoice/services/helpers.dart';
 
 // CSV: template: description;pricePerUnit;amount

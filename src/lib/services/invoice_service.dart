@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:invoice/datatypes/invoice_element.dart';
-import 'package:invoice/pages/invoice_creation/invoice_creation.dart';
+import 'package:invoice/models/invoice_element.dart';
 import 'package:invoice/pages/invoice_creation/invoice_waiting_screen.dart';
-import 'package:invoice/services/config_service.dart';
 import 'package:invoice/services/helpers.dart';
+import 'package:invoice/services/template_service.dart';
 import 'package:invoice/widgets/mint_y.dart';
 
 class InvoiceService {
@@ -69,7 +68,8 @@ class InvoiceService {
     var arguments = [
       "generator-html.py",
       "--template",
-      "${getConfigDirectory()}/template.csv",
+      "${getInvoicesDirectory()}/data/templates/${TemplateService.currentTemplate.fileName}",
+      // "${getConfigDirectory()}/template.csv", // TODO: Change path
       "--customerCompany",
       currentCompanyName,
       "--customerName",
@@ -119,27 +119,17 @@ class InvoiceService {
       }
     }
 
-    // Add logo
-    String logoPath = ConfigHandler.getValueUnsafe("logoPath", "");
-    if (logoPath != "") {
-      arguments.add("--logo");
-      arguments.add(logoPath);
-    }
-
-    // Add vat rate
-    String vatRate = ConfigHandler.getValueUnsafe("defaultVatRate", "0");
-    if (vatRate != "") {
-      arguments.add("--vat");
-      arguments.add(vatRate);
-    }
-
     var result = await Process.run("/usr/bin/python3", arguments);
 
-    print(result.stdout);
-    print(result.stderr);
+    String pathOfPrintedInvoice = "";
+    for (String line in result.stdout.split("\n")) {
+      if (line.startsWith("InvoicePath:")) {
+        pathOfPrintedInvoice = line.replaceAll("InvoicePath:", "").trim();
+      }
+    }
 
-    // // Wait for file to be generated
-    // await Future.delayed(const Duration(milliseconds: 3000));
+    // print(result.stdout);
+    // print(result.stderr);
 
     // Get current month and year
     var now = DateTime.now();
@@ -152,6 +142,9 @@ class InvoiceService {
       if (opendInvoiceFolder == false) {
         opendInvoiceFolder = true;
         Process.run("xdg-open", ["${getInvoicesDirectory()}/$year/$month/"]);
+      }
+      if (pathOfPrintedInvoice != "") {
+        Process.run("xdg-open", [pathOfPrintedInvoice]);
       }
       clearInvoiceElements();
     }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:invoice/datatypes/customer.dart';
+import 'package:invoice/models/customer.dart';
 import 'package:invoice/pages/invoice_creation/invoice_creation.dart';
 import 'package:invoice/services/customer_service.dart';
 import 'package:invoice/services/invoice_service.dart';

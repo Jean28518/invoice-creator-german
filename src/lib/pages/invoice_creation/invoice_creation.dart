@@ -2,15 +2,15 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:invoice/datatypes/article.dart';
-import 'package:invoice/datatypes/invoice_element.dart';
-import 'package:invoice/pages/loading_screen.dart';
-import 'package:invoice/pages/template_settings/template_settings.dart';
+import 'package:invoice/models/article.dart';
+import 'package:invoice/models/invoice_element.dart';
+import 'package:invoice/pages/template_settings/template_overview.dart';
 import 'package:invoice/services/article_service.dart';
 import 'package:invoice/services/helpers.dart';
 import 'package:invoice/services/invoice_service.dart';
 import 'package:invoice/widgets/customer_widget.dart';
 import 'package:invoice/widgets/mint_y.dart';
+import 'package:invoice/widgets/templateSelector.dart';
 
 GlobalKey<InvoiceElementTableWidgetState> invoiceElementTableWidgetKey =
     GlobalKey();
@@ -25,6 +25,17 @@ class InvoiceCreationPage extends StatelessWidget {
       title: "Rechnung erstellen",
       centerContentElements: false,
       contentElements: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Vorlage:", style: Theme.of(context).textTheme.headlineSmall),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: TemplateSelectorWidget(),
+            ),
+          ],
+        ),
+        Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider()),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,10 +145,13 @@ class InvoiceCreationPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: MintYButtonNavigate(
-                    route: TemplateSettingsPage(),
-                    text:
-                        const Text("Einstellungen", style: MintY.heading4White),
-                    color: MintY.currentColor),
+                  text: const Text(
+                    "Vorlagen verwalten",
+                    style: MintY.heading4White,
+                  ),
+                  color: MintY.currentColor,
+                  route: const TemplateOverviewPage(),
+                ),
               )
             ],
           ),

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:invoice/datatypes/customer.dart';
+import 'package:invoice/models/customer.dart';
 import 'package:invoice/services/helpers.dart';
 
 // CSV: template: companyName;name;street;zip;city;country

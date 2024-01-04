@@ -2,6 +2,7 @@ SALUTATION;Sehr geehrte Damen und Herren,
 MESSAGE;bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer #!INVOICE-NUM bis zum #!PAY-DATE auf das angegebene Konto ein.
 HINT;Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.
 CLOSING;Mit freundlichen Grüßen
+SEN-COMPANY;Musterfirma
 SEN-NAME;Jean Doe
 SEN-STREET;Meine-Str. 125
 SEN-ZIP;67890
@@ -13,3 +14,5 @@ SEN-TAX-ID;1234 123 123
 MONEY-INSTITUTE;DAB-Bank
 IBAN;DE00 3006 0088 1234 5678 90
 BIC;DRTTZZUUXXX
+DEFAULT-VAT;0
+ICON-PATH;logo.png

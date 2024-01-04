@@ -3,6 +3,7 @@ import 'package:invoice/pages/first_start/last_hints.dart';
 import 'package:invoice/widgets/mint_y.dart';
 import 'package:invoice/widgets/setting_widget.dart';
 import 'package:invoice/widgets/template_setting_widget.dart';
+import 'package:invoice/services/template_service.dart';
 
 class InvoiceTextEnteringPage extends StatelessWidget {
   const InvoiceTextEnteringPage({super.key});
@@ -24,29 +25,33 @@ class InvoiceTextEnteringPage extends StatelessWidget {
           height: 50,
         ),
         TemplateSettingWidgetTextLine(
+          template: TemplateService.currentTemplate,
           description: "Anrede",
           defaultValue: "Sehr geehrte Damen und Herren,",
-          csvKey: "invoiceSalutation",
+          csvKey: "SALUTATION",
           displaySaveButton: false,
         ),
         TemplateSettingWidgetTextLine(
+          template: TemplateService.currentTemplate,
           description: "Rechnungstext",
           defaultValue:
               "bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\\invoiceReference) bis zum \\payDate \\ auf das angegebene Konto ein.",
-          csvKey: "invoiceText",
+          csvKey: "MESSAGE",
           displaySaveButton: false,
         ),
         TemplateSettingWidgetTextLine(
+          template: TemplateService.currentTemplate,
           description: "Rechnungshinweis",
           defaultValue:
               "Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.",
-          csvKey: "invoiceHint",
+          csvKey: "HINT",
           displaySaveButton: false,
         ),
         TemplateSettingWidgetTextLine(
+          template: TemplateService.currentTemplate,
           description: "Rechnungsabschluss",
           defaultValue: "Mit freundlichen Grüßen",
-          csvKey: "invoiceClosing",
+          csvKey: "CLOSING",
           displaySaveButton: false,
         ),
         const SizedBox(
@@ -61,10 +66,11 @@ class InvoiceTextEnteringPage extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        SettingWidgetTextLine(
-          description: "Absoluter Pfad zum Logo\n(.png, bis 150px)",
-          defaultValue: "/home/benutzer/Bilder/logo.png",
-          configKey: "logoPath",
+        TemplateSettingWidgetTextLine(
+          template: TemplateService.currentTemplate,
+          description: "Pfad zum Logo\n(.png, bis 150px)",
+          defaultValue: "logo.png",
+          csvKey: "ICON-PATH",
           displaySaveButton: false,
         ),
       ],

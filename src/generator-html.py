@@ -106,9 +106,6 @@ def main():
 
     # Path to the template file
     parser.add_argument('--template', help='Path to the template file. Default: template.csv', default=f'{config_dir}/template.csv')
-    
-    # VAT
-    parser.add_argument('--vat', help='VAT in percent. Default: 0', default='0')
 
     # Get number of payment days
     parser.add_argument('--paymentDays', help='Number of days until payment is due. Default: 14', default='14')
@@ -227,7 +224,7 @@ def main():
         # Discount price
         sum_netto -= float(discount[1])
     
-    vat = float(args.vat)
+    vat = float(get_value(template_lines, "DEFAULT-VAT"))
     vat_sum = sum_netto * (vat / 100)
     sum_brutto = sum_netto + vat_sum
 
@@ -235,8 +232,14 @@ def main():
     # Generate html for sender info
     sen_info_description = ""
     sen_info_data = ""
+    if is_key_present(template_lines, "SEN-COMPANY"):
+        sen_info_description += "Firma <br>"
+        sen_company = get_value(template_lines, "SEN-COMPANY")
+        sen_info_data += f"{sen_company} <br>"
+
     if is_key_present(template_lines, "SEN-NAME") and is_key_present(template_lines, "SEN-STREET") and is_key_present(template_lines, "SEN-CITY"):
         sen_info_description += "Anschrift <br> <br> <br> <br>"
+        sen_name = get_value(template_lines, "SEN-NAME")
         sen_name = get_value(template_lines, "SEN-NAME")
         sen_street = get_value(template_lines, "SEN-STREET")
         sen_zip = get_value(template_lines, "SEN-ZIP")
@@ -318,12 +321,22 @@ def main():
     f.writelines(lines)
     f.close()
 
+    logo_path = get_value(template_lines, "ICON-PATH")
+    print("Logo path: " + logo_path)
+    print("Template Dir: " + os.path.dirname(args.template))
     # Copy logo to cache dir.
-    if args.logo != "":
+    if logo_path != "":
         if not os.path.exists(args.logo):
-            print(f'Error: Could not open logo file: "{args.logo}"')
-            # Copy the default logo
-            os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
+            # Try with local path directly next to the template.csv
+            # Get the path of the template.csv
+            template_dir = os.path.dirname(args.template)
+            logo_path = template_dir + "/" + logo_path
+            if not os.path.exists(logo_path):
+                print(f'Error: Could not open logo file: "{args.logo}"')
+                # Copy the default logo
+                os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
+            else:
+                os.system(f"cp {logo_path} {cache_dir}/logo.png")
         else:
             os.system(f"cp {args.logo} {cache_dir}/logo.png")
     else:
@@ -345,7 +358,7 @@ def main():
 
 
     os.system(f"{chromium_exec} --no-sandbox --headless --disable-gpu --print-to-pdf={print_path} --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
-
+    print("InvoicePath: " + print_path)
     pass
 
 if __name__ == "__main__":

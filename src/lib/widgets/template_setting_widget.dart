@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:invoice/services/template_setting_service.dart';
+import 'package:invoice/models/template.dart';
+import 'package:invoice/services/template_service.dart';
 import 'package:invoice/widgets/mint_y.dart';
 
 class TemplateSettingWidgetTextLine extends StatelessWidget {
@@ -8,15 +9,17 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
   String value = '';
   String csvKey = '';
   bool displaySaveButton;
+  Template template;
 
   TemplateSettingWidgetTextLine(
       {super.key,
       required this.description,
       required this.defaultValue,
       required this.csvKey,
+      required this.template,
       this.displaySaveButton = true}) {
-    if (TemplateSettingService.templateSettings[csvKey] != null) {
-      value = TemplateSettingService.templateSettings[csvKey]!;
+    if (template.templateData[csvKey] != null) {
+      value = template.templateData[csvKey]!;
     }
   }
 
@@ -43,8 +46,7 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
           hintText: defaultValue,
           onChanged: (String newValue) {
             value = newValue;
-            TemplateSettingService.templateSettings[csvKey] =
-                value.replaceAll("\n", " ");
+            template.templateData[csvKey] = value.replaceAll("\n", " ");
           },
           controller: controller,
         ),
@@ -62,7 +64,7 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
                 onPressed: () {
                   // Replace new line with spaces because it will otherwise crash the .latex file
                   value = value.replaceAll("\n", " ");
-                  TemplateSettingService.saveValue(csvKey, value);
+                  TemplateService.saveValue(template, csvKey, value);
                   controller.text = value;
                 },
               )

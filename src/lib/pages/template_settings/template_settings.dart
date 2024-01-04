@@ -1,36 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:invoice/models/template.dart';
+import 'package:invoice/pages/template_settings/template_overview.dart';
 import 'package:invoice/services/config_service.dart';
-import 'package:invoice/services/template_setting_service.dart';
+import 'package:invoice/services/template_service.dart';
 import 'package:invoice/widgets/mint_y.dart';
-import 'package:invoice/widgets/setting_widget.dart';
 import 'package:invoice/widgets/template_setting_widget.dart';
 
-// \newcommand{\invoiceSalutation}{Sehr geehrte Damen und Herren,} % die Anrede
-// \newcommand{\invoiceText}{für die von mir erbrachte Leistung erhalten Sie hiermit die Rechnung. Bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\invoiceReference) bis zum \payDate \ auf das angegebene Konto ein.} % Rechnungstext
-// \newcommand{\invoiceHint}{Im ausgewiesenen Betrag ist gemäß § 19 UStG keine Umsatzsteuer enthalten.}
-// \newcommand{\invoiceClosing}{Mit freundlichen Grüßen}
-
-// % ################## Personal DATA ##################
-// % START INVOICE DATA
-// %\newcommand{\taxID}{#!DEACTIVATED!#}
-// % END INVOICE DATA
-// % START SENDERS DATA
-// \newcommand{\senderName}{Jean Doe}
-// \newcommand{\senderStreet}{Meine-Str. 125}
-// \newcommand{\senderZIP}{67890}
-// \newcommand{\senderCity}{Musterstadt}
-// \newcommand{\senderTelephone}{+49 (0)33445 9876345}
-// \newcommand{\senderMobilephone}{+49 (0)151 29134704}
-// \newcommand{\senderEmail}{mail@domain.de}
-// \newcommand{\senderWeb}{\url{www.domain.com}}
-// % END SENDERS DATA
-// % START ACCOUNT DATA
-// \newcommand{\accountBankName}{DAB-Bank}
-// \newcommand{\accountIBAN}{DE00 3006 0088 1234 5678 90}
-// \newcommand{\accountBIC}{DRTTZZUUXXX}
-
 class TemplateSettingsPage extends StatelessWidget {
-  const TemplateSettingsPage({super.key});
+  final Template template;
+  const TemplateSettingsPage({super.key, required this.template});
 
   @override
   Widget build(BuildContext context) {
@@ -38,100 +16,136 @@ class TemplateSettingsPage extends StatelessWidget {
       title: "Vorlagen-Einstellungen",
       contentElements: [
         TemplateSettingWidgetTextLine(
+            template: template,
+            description: "Template-Name",
+            defaultValue: "",
+            csvKey: "TEMPLATE-NAME"),
+        TemplateSettingWidgetTextLine(
+            template: template,
             description: "Ihr Name",
             defaultValue: "Max Mustermann",
             csvKey: "SEN-NAME"),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "Straße",
             defaultValue: "Musterstraße 12",
             csvKey: "SEN-STREET"),
         TemplateSettingWidgetTextLine(
-            description: "PLZ", defaultValue: "12345", csvKey: "SEN-ZIP"),
+            template: template,
+            description: "PLZ",
+            defaultValue: "12345",
+            csvKey: "SEN-ZIP"),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "Stadt",
             defaultValue: "Musterstadt",
             csvKey: "SEN-CITY"),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "Telefon",
             defaultValue: "+49 (0)123 456789",
             csvKey: "SEN-PHONE"),
         TemplateSettingWidgetTextLine(
+          template: template,
           description: "E-Mail",
           defaultValue: "",
           csvKey: "SEN-EMAIL",
         ),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "Webseite",
             defaultValue: "www.domain.com",
             csvKey: "SEN-WEBSITE"),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "Bank",
             defaultValue: "DAB-Bank",
             csvKey: "MONEY-INSTITUTE"),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "IBAN",
             defaultValue: "DE00 3006 0088 1234 5678 90",
             csvKey: "IBAN"),
         TemplateSettingWidgetTextLine(
-            description: "BIC", defaultValue: "DRTTZZUUXXX", csvKey: "BIC"),
+            template: template,
+            description: "BIC",
+            defaultValue: "DRTTZZUUXXX",
+            csvKey: "BIC"),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "USt-IdNr.",
             defaultValue: "DE123456789",
             csvKey: "SEN-TAX-ID"),
         TemplateSettingWidgetTextLine(
+          template: template,
           description: "Anrede",
           defaultValue: "Sehr geehrte Damen und Herren,",
           csvKey: "SALUTATION",
         ),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "Rechnungstext",
             defaultValue:
                 "bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (\\invoiceReference) bis zum \\payDate \\ auf das angegebene Konto ein.",
             csvKey: "MESSAGE"),
         TemplateSettingWidgetTextLine(
+          template: template,
           description: "Rechnungshinweis",
           defaultValue:
               "Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.",
           csvKey: "HINT",
         ),
         TemplateSettingWidgetTextLine(
+            template: template,
             description: "Rechnungsabschluss",
             defaultValue: "Mit freundlichen Grüßen",
             csvKey: "CLOSING"),
-        SettingWidgetTextLine(
+        TemplateSettingWidgetTextLine(
+            template: template,
             description: "Absoluter Pfad zum Logo\n(.png, bis 150px)",
             defaultValue: "/home/benutzer/Bilder/logo.png",
-            configKey: "logoPath"),
-        SettingWidgetTextLine(
+            csvKey: "ICON-PATH"),
+        TemplateSettingWidgetTextLine(
+            template: template,
             description: "Standard Steuersatz (in %)",
             defaultValue: "0",
-            configKey: "defaultVatRate"),
+            csvKey: "DEFAULT-VAT"),
+        const Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MintYButtonNavigate(
+              route: const TemplateOverviewPage(),
+              onPressed: () => TemplateService.deleteTemplate(template),
+              text: const Text("Vorlage löschen", style: MintY.heading4White),
+              color: Colors.red,
+            ),
+          ],
+        )
       ],
       bottom: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          MintYButton(
-            text: const Text("Zurück", style: MintY.heading4White),
+          MintYButtonNavigate(
+            text: const Text("Zurück", style: MintY.heading4),
             onPressed: () {
               /// Trigger init to reload the settings from file
               /// and destroy temporary settings, which the user could have made
               /// but not saved
-              TemplateSettingService.init();
+              TemplateService.init();
               ConfigHandler.loadConfigFromFile();
-
-              Navigator.pop(context);
             },
-            color: MintY.currentColor,
+            route: const TemplateOverviewPage(),
           ),
           const SizedBox(width: 20),
-          MintYButton(
+          MintYButtonNavigate(
             text: const Text("Alles Speichern", style: MintY.heading4White),
             onPressed: () {
-              TemplateSettingService.saveAllTemplateSettings();
+              TemplateService.saveTemplate(template);
               ConfigHandler.saveConfigToFile();
-              Navigator.pop(context);
             },
             color: MintY.currentColor,
+            route: const TemplateOverviewPage(),
           )
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invoice/pages/first_start/invoice_text.dart';
+import 'package:invoice/services/template_service.dart';
 import 'package:invoice/widgets/mint_y.dart';
 import 'package:invoice/widgets/template_setting_widget.dart';
 
@@ -24,64 +25,76 @@ class BasicDataEnteringPage extends StatelessWidget {
           height: 50,
         ),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "Name",
             defaultValue: "Max Mustermann",
-            csvKey: "senderName",
+            csvKey: "SEN-NAME",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "Straße",
             defaultValue: "Musterstraße 12",
-            csvKey: "senderStreet",
+            csvKey: "SEN-STREET",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "PLZ",
             defaultValue: "12345",
-            csvKey: "senderZIP",
+            csvKey: "SEN-ZIP",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "Stadt",
             defaultValue: "Musterstadt",
-            csvKey: "senderCity",
+            csvKey: "SEN-CITY",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "Telefon",
             defaultValue: "+49 (0)123 456789",
-            csvKey: "senderTelephone",
+            csvKey: "SEN-PHONE",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
-            description: "Mobil",
-            defaultValue: "+49 (0)123 456789",
-            csvKey: "senderMobilephone",
-            displaySaveButton: false),
-        TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "E-Mail",
             defaultValue: "",
-            csvKey: "senderEmail",
+            csvKey: "SEN-EMAIL",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "Webseite",
             defaultValue: "www.domain.com",
-            csvKey: "senderWeb",
+            csvKey: "SEN-WEBSITE",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "Bank",
             defaultValue: "DAB-Bank",
-            csvKey: "accountBankName",
+            csvKey: "MONEY-INSTITUTE",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "IBAN",
             defaultValue: "DE00 3006 0088 1234 5678 90",
-            csvKey: "accountIBAN",
+            csvKey: "IBAN",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "BIC",
             defaultValue: "DRTTZZUUXXX",
-            csvKey: "accountBIC",
+            csvKey: "BIC",
             displaySaveButton: false),
         TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
             description: "USt-IdNr.",
             defaultValue: "DE123456789",
-            csvKey: "taxID",
+            csvKey: "SEN-TAX-ID",
+            displaySaveButton: false),
+        TemplateSettingWidgetTextLine(
+            template: TemplateService.currentTemplate,
+            description: "Steuersatz (in Prozent)",
+            defaultValue: "19",
+            csvKey: "DEFAULT-VAT",
             displaySaveButton: false),
       ],
       bottom: Row(

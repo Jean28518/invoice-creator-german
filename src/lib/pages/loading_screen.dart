@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:invoice/datatypes/article.dart';
 import 'package:invoice/pages/first_start/first_start.dart';
 import 'package:invoice/pages/invoice_creation/invoice_creation.dart';
 import 'package:invoice/services/article_service.dart';
 import 'package:invoice/services/config_service.dart';
 import 'package:invoice/services/customer_service.dart';
-import 'package:invoice/services/template_setting_service.dart';
+import 'package:invoice/services/template_service.dart';
 import 'package:invoice/widgets/mint_y.dart';
 
 class LoadingScreenPage extends StatelessWidget {
@@ -14,7 +13,7 @@ class LoadingScreenPage extends StatelessWidget {
   /// Returns if the first start of the application is done
   Future<bool> loadingFunction() async {
     await ConfigHandler.ensureConfigIsLoaded();
-    TemplateSettingService.init();
+    TemplateService.init();
     CustomerService.init();
     ArticleService.init();
 
