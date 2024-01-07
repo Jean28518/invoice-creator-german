@@ -2,12 +2,12 @@ name: release-pipeline
 
 on:
   workflow_dispatch:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-    # tags:
-    #   - "*"
+  # push:
+  #   branches: ["main"]
+  # pull_request:
+  #   branches: ["main"]
+  # tags:
+  #   - "*"
 
 permissions:
   contents: write
