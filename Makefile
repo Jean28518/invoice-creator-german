@@ -4,8 +4,10 @@ dev: ## start debugging
 tests: ## start testing 
 	@echo "// todo: implement"
 
+release-pipeline: install-dependencies build-bundle ## command pipelines runs to create new release
+
 install-dependencies: ## install all needed dependencies before run
-	@echo "// todo: implement"
+	(cd src/ ; flutter pub get)
 
 build-deb: ## build as a deb file
 	@bash devops/scripts/build/build-deb.sh
