@@ -1,0 +1,28 @@
+name: release-pipeline
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      #   - run: git fetch --force --tags
+      - uses: browser-actions/setup-chrome@v1
+        # with:
+        #   chrome-version: 120
+      - uses: subosito/flutter-action@v2
+        with:
+          #   flutter-version: "3.7.7" # add your supported flutter version here
+          channel: "stable"
+          architecture: x64
+      - name: Get dependencies
+        run: (cd src/ ; flutter pub get)
