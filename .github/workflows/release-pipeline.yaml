@@ -2,8 +2,8 @@ name: release-pipeline
 
 on:
   push:
-    tags:
-      - "*"
+    # tags:
+    #   - "*"
 
 permissions:
   contents: write
