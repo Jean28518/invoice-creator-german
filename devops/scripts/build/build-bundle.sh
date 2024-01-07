@@ -34,5 +34,3 @@ if [ -f "rechnungs-assistent-bundle-$VERSION.zip" ]; then
     rm rechnungs-assistent-bundle-$VERSION.zip
 fi
 zip -r rechnungs-assistent-bundle-$VERSION.zip rechnungs-assistent-bundle
-
-ls -lah ./rechnungs-assistent-bundle

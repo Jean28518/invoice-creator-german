@@ -2,12 +2,6 @@ name: release-pipeline
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: ["main"]
-  # pull_request:
-  #   branches: ["main"]
-  # tags:
-  #   - "*"
 
 permissions:
   contents: write
@@ -32,3 +26,9 @@ jobs:
 
       - name: Create Release
         run: make release-pipeline
+
+      - name: Show Main Folder
+        run: ls -lah
+
+      - name: Show Release Folder
+        run: ls -lah rechnungs-assistent-bundle
