@@ -24,6 +24,9 @@ jobs:
 
       - name: Tag current release
         run: |
+          git config --global user.name "GitHub Actions Pipeline"
+          git config --global user.email "githubactionspipeline@example.com"
+
           git add .
           git commit -m "pipeline: prepare to release"
           git tag ${{ inputs.version }}
