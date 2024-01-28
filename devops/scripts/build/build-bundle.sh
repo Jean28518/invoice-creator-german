@@ -1,4 +1,4 @@
-VERSION="$( cat ../../version )"
+VERSION="$( cat version )"
 
 # Build App
 cd src
