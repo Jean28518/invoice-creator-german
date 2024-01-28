@@ -2,6 +2,10 @@ name: release-pipeline
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        required: true
 
 permissions:
   contents: write
@@ -13,22 +17,25 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      #   - run: git fetch --force --tags
       - uses: browser-actions/setup-chrome@v1
         # with:
         #   chrome-version: 120
 
       - uses: subosito/flutter-action@v2
         with:
-          #   flutter-version: "3.7.7" # add your supported flutter version here
           channel: "stable"
           architecture: x64
+          #   flutter-version: "3.7.7" # add your supported flutter version here
 
       - name: Create Release
         run: make release-pipeline
 
-      - name: Show Main Folder
-        run: ls -lah
-
-      - name: Show Release Folder
-        run: ls -lah rechnungs-assistent-bundle
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Invoice Creator v${{ inputs.version }} "
+          body_path: /Changelog.txt
+          files: |
+            Changelog.txt
+            LICENSE
+            rechnungs-assistent_1.0.0.deb
