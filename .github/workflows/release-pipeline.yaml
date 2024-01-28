@@ -20,7 +20,7 @@ jobs:
 
       - name: Change version file in Code
         run: |
-          echo "${{ inputs.version }}" >> version
+          echo "${{ inputs.version }}" > version
 
       - name: Tag current release
         run: |
