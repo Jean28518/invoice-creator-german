@@ -41,6 +41,7 @@ jobs:
         with:
           name: "Invoice Creator v${{ inputs.version }}"
           body_path: /Changelog.txt
+          tag_name: ${{ inputs.version }}
           files: |
             Changelog.txt
             LICENSE
