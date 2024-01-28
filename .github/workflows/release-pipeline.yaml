@@ -18,8 +18,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Change version file in Code
+        run: |
+          echo "${{ inputs.version }}" >> version
+
       - name: Tag current release
         run: |
+          git add .
+          git commit -m "pipeline: prepare to release"
           git tag ${{ inputs.version }}
           git push origin ${{ inputs.version }}
 
@@ -44,4 +50,4 @@ jobs:
           tag_name: ${{ inputs.version }}
           files: |
             LICENSE
-            rechnungs-assistent_1.0.0.deb
+            rechnungs-assistent_${{ inputs.version }}.deb
