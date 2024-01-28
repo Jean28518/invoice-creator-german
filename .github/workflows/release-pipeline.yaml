@@ -40,9 +40,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: "Invoice Creator v${{ inputs.version }}"
-          body_path: /Changelog.txt
+          body_path: Changelog.txt
           tag_name: ${{ inputs.version }}
           files: |
-            Changelog.txt
             LICENSE
             rechnungs-assistent_1.0.0.deb
