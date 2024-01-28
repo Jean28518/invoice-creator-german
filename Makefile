@@ -4,7 +4,7 @@ dev: ## start debugging
 tests: ## start testing 
 	@echo "// todo: implement"
 
-release-pipeline: install-dependencies build-bundle ## command pipelines runs to create new release
+release-pipeline: install-dependencies build-bundle build-deb ## command pipelines runs to create new release
 
 install-dependencies: ## install all needed dependencies before run
 	(cd src/ ; flutter pub get)
