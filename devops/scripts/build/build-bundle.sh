@@ -18,12 +18,14 @@ fi
 
 mkdir -p rechnungs-assistent-bundle
 mv chrome-linux rechnungs-assistent-bundle/chromium
+
 # Copy relevant files to zip
 cp -r src/build/linux/x64/release/bundle/* rechnungs-assistent-bundle
 cp src/generator-html.py rechnungs-assistent-bundle
 cp -r src/html rechnungs-assistent-bundle
 cp deb/usr/bin/rechnungs-assistent rechnungs-assistent-bundle/rechnungs-assistent.sh
 cp rechnungs-assistent.png rechnungs-assistent-bundle/
+
 # Remove the line "cd /usr/lib/rechnungs-assistent" in rechnungs-assistent-bundle/rechnungs-assistent.sh
 sed -i 's|cd /usr/lib/rechnungs-assistent||g' rechnungs-assistent-bundle/rechnungs-assistent.sh
 
