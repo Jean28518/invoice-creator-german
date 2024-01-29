@@ -44,7 +44,8 @@ def get_all_lines_from_file(file_path):
 def is_key_present(csv_lines, key):
     for line in csv_lines:
         if line.split(";")[0] == key:
-            return True
+            if line.split(";")[1].replace("\n", "") != "":
+                return True
     return False
 
 
@@ -236,9 +237,9 @@ def main():
     sen_info_description = ""
     sen_info_data = ""
     if is_key_present(template_lines, "SEN-COMPANY"):
-        sen_info_description += "Firma <br>"
+        sen_info_description += "<br>"
         sen_company = get_value(template_lines, "SEN-COMPANY")
-        sen_info_data += f"{sen_company} <br>"
+        sen_info_data += f"<strong>{sen_company}</strong> <br>"
 
     if is_key_present(template_lines, "SEN-NAME") and is_key_present(template_lines, "SEN-STREET") and is_key_present(template_lines, "SEN-CITY"):
         sen_info_description += "Anschrift <br> <br> <br> <br>"
@@ -259,7 +260,7 @@ def main():
     if is_key_present(template_lines, "SEN-WEBSITE"):
         sen_info_description += "Website <br>"
         sen_website = get_value(template_lines, "SEN-WEBSITE")
-        sen_info_data += f"<a style=\"color: grey; text-decoration: none;\" href=\"{sen_website}\">{sen_website}</a> <br>"
+        sen_info_data += f"<a style=\"color: grey; text-decoration: none;\" href=\"https://{sen_website}\">{sen_website}</a> <br>"
     sen_info_description += "<br>"
     sen_info_data += "<br>"
     if is_key_present(template_lines, "SEN-TAX-ID"):

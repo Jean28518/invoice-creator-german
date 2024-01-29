@@ -22,6 +22,11 @@ class TemplateSettingsPage extends StatelessWidget {
             csvKey: "TEMPLATE-NAME"),
         TemplateSettingWidgetTextLine(
             template: template,
+            description: "Firma",
+            defaultValue: "Musterfirma",
+            csvKey: "SEN-COMPANY"),
+        TemplateSettingWidgetTextLine(
+            template: template,
             description: "Ihr Name",
             defaultValue: "Max Mustermann",
             csvKey: "SEN-NAME"),
