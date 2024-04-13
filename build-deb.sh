@@ -21,8 +21,11 @@ mkdir -p deb/usr/share/applications/
 cp rechnungs-assistent.desktop deb/usr/share/applications/
 mkdir -p deb/usr/bin/
 cp rechnungs-assistent deb/usr/bin/
-chmod +x deb/usr/bin/rechnungs-assistent
-chmod 755 deb/DEBIAN
+
+# chown and chmod
+sudo chown -R root:root deb/
+sudo chmod -R 755 deb/
+sudo chmod +x deb/usr/bin/rechnungs-assistent
 
 # Build deb package
 sed -i "2s/.*/Version: $VERSION/" deb/DEBIAN/control
