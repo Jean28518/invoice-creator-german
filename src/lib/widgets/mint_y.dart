@@ -331,6 +331,8 @@ class MintYButton extends StatelessWidget {
   late double width;
   late double height;
 
+  late Color focusColor;
+
   MintYButton(
       {this.text = const Text(""),
       Color color = const Color.fromARGB(255, 232, 232, 232),
@@ -342,6 +344,15 @@ class MintYButton extends StatelessWidget {
     this.onPressed = onPressed;
     this.width = width;
     this.height = height;
+
+    // Generate focus color
+    int red = color.red - 20;
+    int green = color.green - 20;
+    int blue = color.blue - 20;
+    if (red < 0) red = 0;
+    if (green < 0) green = 0;
+    if (blue < 0) blue = 0;
+    focusColor = Color.fromARGB(255, red, green, blue);
   }
 
   @override
@@ -358,7 +369,19 @@ class MintYButton extends StatelessWidget {
             onPressed?.call();
           },
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(color),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+              if (states.contains(MaterialState.focused)) {
+                return focusColor;
+              }
+              if (states.contains(MaterialState.hovered)) {
+                return focusColor;
+              }
+              if (states.contains(MaterialState.pressed)) {
+                return focusColor;
+              }
+              return color;
+            }),
           ),
         ),
       );

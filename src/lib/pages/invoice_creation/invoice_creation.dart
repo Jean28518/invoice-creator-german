@@ -524,178 +524,180 @@ class ArticleCreationWidget extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Container(
-              width: 250,
-              child: Text(
-                "Artikel",
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.center,
+        child: FocusScope(
+          child: Row(
+            children: [
+              Container(
+                width: 250,
+                child: Text(
+                  "Artikel",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
+              Expanded(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: MintYTextField(
+                            hintText: "Artikelname",
+                            width: 300,
+                            onChanged: (p0) {
+                              articleName = p0;
+                            },
+                            controller: articleNameController,
+                          ),
+                        ),
+                        MintYTextField(
+                          hintText: "Preis pro Einheit",
+                          width: 200,
+                          onChanged: (p0) {
+                            articlePricePerUnit = parseDouble(p0);
+                          },
+                          controller: articlePricePerUnitController,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: MintYTextField(
+                            hintText: "Artikelbeschreibung",
+                            maxLines: 4,
+                            width: 100,
+                            onChanged: (p0) {
+                              summary = p0;
+                            },
+                            controller: articleSummaryController,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MintYSelectionDialogWithFilter(
+                          selectionCallback: (string) {
+                            Article article = ArticleService.articles
+                                .firstWhere((element) =>
+                                    "${element.description}, ${element.pricePerUnit}" ==
+                                    string);
+                            articleNameController.text = article.description;
+                            articleName = article.description;
+                            articlePricePerUnitController.text =
+                                article.pricePerUnit;
+                            articlePricePerUnit =
+                                parseDouble(article.pricePerUnit);
+
+                            if (article.amount != "") {
+                              articleAmountController.text = article.amount;
+                              articleAmount = parseDouble(article.amount);
+                            }
+                            articleSummaryController.text = article.summary;
+                            summary = article.summary;
+                          },
+                          deleteCallback: (string) {
+                            Article article = ArticleService.articles
+                                .firstWhere((element) =>
+                                    "${element.description}, ${element.pricePerUnit}" ==
+                                    string);
+                            ArticleService.articles.remove(article);
+                            ArticleService.save();
+                          },
+                          items: List.generate(ArticleService.articles.length,
+                              (index) {
+                            Article article = ArticleService.articles[index];
+                            return "${article.description}, ${article.pricePerUnit}";
+                          }),
+                          buttonText: "Artikel auswählen",
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        MintYButtonNavigate(
+                          route: InvoiceCreationPage(),
+                          text: const Text(
+                            "Artikel speichern",
+                            style: MintY.heading5White,
+                          ),
+                          color: MintY.currentColor,
+                          onPressed: () {
+                            if (articleName == "") {
+                              return;
+                            }
+                            ArticleService.articles.add(Article(
+                              description: articleName,
+                              pricePerUnit: articlePricePerUnit.toString(),
+                              amount: articleAmount.toString(),
+                              summary: summary,
+                            ));
+                            ArticleService.save();
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Column(
                 children: [
                   Row(
                     children: [
-                      Expanded(
-                        child: MintYTextField(
-                          hintText: "Artikelname",
-                          width: 300,
-                          onChanged: (p0) {
-                            articleName = p0;
-                          },
-                          controller: articleNameController,
-                        ),
-                      ),
                       MintYTextField(
-                        hintText: "Preis pro Einheit",
-                        width: 200,
+                        hintText: "Menge",
+                        width: 100,
                         onChanged: (p0) {
-                          articlePricePerUnit = parseDouble(p0);
+                          articleAmount = parseDouble(p0);
                         },
-                        controller: articlePricePerUnitController,
+                        controller: articleAmountController,
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MintYTextField(
-                          hintText: "Artikelbeschreibung",
-                          maxLines: 4,
-                          width: 100,
-                          onChanged: (p0) {
-                            summary = p0;
-                          },
-                          controller: articleSummaryController,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MintYSelectionDialogWithFilter(
-                        selectionCallback: (string) {
-                          Article article = ArticleService.articles.firstWhere(
-                              (element) =>
-                                  "${element.description}, ${element.pricePerUnit}" ==
-                                  string);
-                          articleNameController.text = article.description;
-                          articleName = article.description;
-                          articlePricePerUnitController.text =
-                              article.pricePerUnit;
-                          articlePricePerUnit =
-                              parseDouble(article.pricePerUnit);
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: MintYButton(
+                          text: Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                          color: MintY.currentColor,
+                          onPressed: () {
+                            // if amount or pricer per unit is zero or name is empty, do not add
+                            if (articleAmount == 0.0 ||
+                                articlePricePerUnit == 0.0 ||
+                                articleName == "") {
+                              return;
+                            }
+                            InvoiceService.invoiceElements.add(InvoiceElement(
+                                type: InvoiceElementType.article,
+                                name: articleName,
+                                amount: articleAmount,
+                                pricePerUnit: articlePricePerUnit,
+                                summary: summary));
+                            articleNameController.clear();
+                            articlePricePerUnitController.clear();
+                            articleAmountController.clear();
+                            articleSummaryController.clear();
 
-                          if (article.amount != "") {
-                            articleAmountController.text = article.amount;
-                            articleAmount = parseDouble(article.amount);
-                          }
-                          articleSummaryController.text = article.summary;
-                          summary = article.summary;
-                        },
-                        deleteCallback: (string) {
-                          Article article = ArticleService.articles.firstWhere(
-                              (element) =>
-                                  "${element.description}, ${element.pricePerUnit}" ==
-                                  string);
-                          ArticleService.articles.remove(article);
-                          ArticleService.save();
-                        },
-                        items: List.generate(ArticleService.articles.length,
-                            (index) {
-                          Article article = ArticleService.articles[index];
-                          return "${article.description}, ${article.pricePerUnit}";
-                        }),
-                        buttonText: "Artikel auswählen",
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      MintYButtonNavigate(
-                        route: InvoiceCreationPage(),
-                        text: const Text(
-                          "Artikel speichern",
-                          style: MintY.heading5White,
+                            // update the invoice element table widget
+                            final state =
+                                invoiceElementTableWidgetKey.currentState;
+                            if (state != null) {
+                              state.update();
+                            }
+                          },
                         ),
-                        color: MintY.currentColor,
-                        onPressed: () {
-                          if (articleName == "") {
-                            return;
-                          }
-                          ArticleService.articles.add(Article(
-                            description: articleName,
-                            pricePerUnit: articlePricePerUnit.toString(),
-                            amount: articleAmount.toString(),
-                            summary: summary,
-                          ));
-                          ArticleService.save();
-                        },
                       ),
                     ],
-                  )
+                  ),
+                  SizedBox(
+                    height: 140,
+                  ),
                 ],
               ),
-            ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    MintYTextField(
-                      hintText: "Menge",
-                      width: 100,
-                      onChanged: (p0) {
-                        articleAmount = parseDouble(p0);
-                      },
-                      controller: articleAmountController,
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: MintYButton(
-                        text: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                        color: MintY.currentColor,
-                        onPressed: () {
-                          // if amount or pricer per unit is zero or name is empty, do not add
-                          if (articleAmount == 0.0 ||
-                              articlePricePerUnit == 0.0 ||
-                              articleName == "") {
-                            return;
-                          }
-                          InvoiceService.invoiceElements.add(InvoiceElement(
-                              type: InvoiceElementType.article,
-                              name: articleName,
-                              amount: articleAmount,
-                              pricePerUnit: articlePricePerUnit,
-                              summary: summary));
-                          articleNameController.clear();
-                          articlePricePerUnitController.clear();
-                          articleAmountController.clear();
-                          articleSummaryController.clear();
-
-                          // update the invoice element table widget
-                          final state =
-                              invoiceElementTableWidgetKey.currentState;
-                          if (state != null) {
-                            state.update();
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 140,
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
