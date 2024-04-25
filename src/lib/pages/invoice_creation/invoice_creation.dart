@@ -626,9 +626,11 @@ class ArticleCreationWidget extends StatelessWidget {
                             return;
                           }
                           ArticleService.articles.add(Article(
-                              description: articleName,
-                              pricePerUnit: articlePricePerUnit.toString(),
-                              amount: articleAmount.toString()));
+                            description: articleName,
+                            pricePerUnit: articlePricePerUnit.toString(),
+                            amount: articleAmount.toString(),
+                            summary: summary,
+                          ));
                           ArticleService.save();
                         },
                       ),

@@ -25,7 +25,7 @@ class ArticleService {
         description: lineSplit[0],
         pricePerUnit: lineSplit[1],
         amount: lineSplit[2],
-        summary: lineSplit[3],
+        summary: lineSplit[3].replaceAll("<br>", "\n"),
       );
       articles.add(article);
     }
@@ -37,7 +37,7 @@ class ArticleService {
     List<String> lines = ["description;pricePerUnit;amount;summary"];
     for (Article article in articles) {
       lines.add(
-          '${article.description};${article.pricePerUnit};${article.amount};${article.summary}');
+          '${article.description};${article.pricePerUnit};${article.amount};${article.summary.replaceAll("\n", "<br>")}');
     }
     articleFile.writeAsStringSync(lines.join("\n"));
   }
