@@ -14,4 +14,11 @@ class Template {
   Map<String, String> templateData = {};
 
   Template({required this.fileName, required this.templateData});
+
+  String getCurrency() {
+    if (templateData['CURRENCY'] != null) {
+      return templateData['CURRENCY']!;
+    }
+    return "€";
+  }
 }

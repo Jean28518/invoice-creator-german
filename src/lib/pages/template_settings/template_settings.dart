@@ -115,6 +115,11 @@ class TemplateSettingsPage extends StatelessWidget {
             description: "Standard Steuersatz (in %)",
             defaultValue: "0",
             csvKey: "DEFAULT-VAT"),
+        TemplateSettingWidgetTextLine(
+            template: template,
+            description: "Währung",
+            defaultValue: "€",
+            csvKey: "CURRENCY"),
         const Divider(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

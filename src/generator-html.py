@@ -50,14 +50,14 @@ def is_key_present(csv_lines, key):
 
 
 # Returns the second csv field.
-def get_value(csv_lines, key):
+def get_value(csv_lines, key, default = ""):
     for line in csv_lines:
         if line.split(";")[0] == key:
             return line.split(";")[1]
-    return ""
+    return default
 
 
-def convert_to_euro_string(value):
+def convert_to_euro_string(template_lines, value):
     value = str(round(float(value), 2))
     if value.find(".") == -1:
         value += ",00"
@@ -65,7 +65,8 @@ def convert_to_euro_string(value):
     # If value ends only with one digit, add a 0
     if value[len(value) - 2] == ",":
         value += "0"
-    return value + " €"
+    currency = get_value(template_lines, "CURRENCY", "€")
+    return value + " " + currency
     
 
 def main():
@@ -211,13 +212,13 @@ def main():
         description = ""
         if article[3] != "":
             description = f'<br>{article[3]}'
-        table_html += f'<tr><td class="invoice-item-name"><strong>{article[0]}</strong>{description}</td><td>{convert_to_euro_string(article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(float(article[1]) * float(article[2]))}</td></tr>\n'
+        table_html += f'<tr><td class="invoice-item-name"><strong>{article[0]}</strong>{description}</td><td>{convert_to_euro_string(template_lines, article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(template_lines, float(article[1]) * float(article[2]))}</td></tr>\n'
 
     for expense in expenses:
-        table_html += f'<tr><td class="invoice-item-name">{expense[0]}</td><td> - </td><td> - </td><td>{convert_to_euro_string(expense[1])}</td></tr>\n'
+        table_html += f'<tr><td class="invoice-item-name">{expense[0]}</td><td> - </td><td> - </td><td>{convert_to_euro_string(template_lines, expense[1])}</td></tr>\n'
 
     for discount in discounts:
-        table_html += f'<tr><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>- {convert_to_euro_string(discount[1])}</td></tr>\n'
+        table_html += f'<tr><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>- {convert_to_euro_string(template_lines, discount[1])}</td></tr>\n'
     
     # Calculate sum
     sum_netto = 0
@@ -324,10 +325,10 @@ def main():
         lines[i] = lines[i].replace("#!INVOICE-NUM", invoice_number)
 
         # Sum with VAT
-        lines[i] = lines[i].replace("#!SUM-WITHOUT-VAT", convert_to_euro_string(sum_netto))
+        lines[i] = lines[i].replace("#!SUM-WITHOUT-VAT", convert_to_euro_string(template_lines, sum_netto))
         lines[i] = lines[i].replace("#!VAT-PERCENT", str(vat) + " %")
-        lines[i] = lines[i].replace("#!VAT-ADDITION", convert_to_euro_string(vat_sum))
-        lines[i] = lines[i].replace("#!SUM-WITH-VAT", convert_to_euro_string(sum_brutto))
+        lines[i] = lines[i].replace("#!VAT-ADDITION", convert_to_euro_string(template_lines, vat_sum))
+        lines[i] = lines[i].replace("#!SUM-WITH-VAT", convert_to_euro_string(template_lines, sum_brutto))
 
         # Table
         lines[i] = lines[i].replace("#!ITEMS", table_html)

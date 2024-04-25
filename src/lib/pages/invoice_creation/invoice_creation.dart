@@ -8,6 +8,7 @@ import 'package:invoice/pages/template_settings/template_overview.dart';
 import 'package:invoice/services/article_service.dart';
 import 'package:invoice/services/helpers.dart';
 import 'package:invoice/services/invoice_service.dart';
+import 'package:invoice/services/template_service.dart';
 import 'package:invoice/widgets/customer_widget.dart';
 import 'package:invoice/widgets/mint_y.dart';
 import 'package:invoice/widgets/templateSelector.dart';
@@ -280,8 +281,8 @@ class InvoiceElementTableWidgetState extends State<InvoiceElementTableWidget> {
                             width: 100,
                             child: Text(
                               invoiceElement.type == InvoiceElementType.discount
-                                  ? "-${invoiceElement.price} €"
-                                  : "${invoiceElement.price} €",
+                                  ? "-${invoiceElement.price} ${TemplateService.currentTemplate.getCurrency()}"
+                                  : "${invoiceElement.price} ${TemplateService.currentTemplate.getCurrency()}",
                               style: Theme.of(context).textTheme.headlineSmall,
                               textAlign: TextAlign.center,
                             ),
@@ -368,7 +369,8 @@ class DiscountCreationWidget extends StatelessWidget {
               ),
             ),
             MintYTextField(
-              hintText: "Preisnachlass in €",
+              hintText:
+                  "Preisnachlass in ${TemplateService.currentTemplate.getCurrency()}",
               width: 200,
               onChanged: (value) {
                 discountPrice = parseDouble(value);
