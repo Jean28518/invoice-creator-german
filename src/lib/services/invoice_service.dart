@@ -24,6 +24,9 @@ class InvoiceService {
   static String currentCustomerZip = "";
   static String currentCustomerCity = "";
 
+  static String overrideInvoiceNumber = "";
+  static String overrideServiceDate = "";
+
   static void deleteInvoiceElement(int id) {
     invoiceElements.removeWhere((element) => element.id == id);
   }
@@ -35,6 +38,8 @@ class InvoiceService {
     currentCustomerStreet = "";
     currentCustomerZip = "";
     currentCustomerCity = "";
+    overrideInvoiceNumber = "";
+    overrideServiceDate = "";
   }
 
   static void generateInvoice(
@@ -81,6 +86,16 @@ class InvoiceService {
       "--customerCity",
       currentCustomerCity,
     ];
+
+    if (overrideInvoiceNumber != "") {
+      arguments.add("--invoiceNumber");
+      arguments.add(overrideInvoiceNumber);
+    }
+
+    if (overrideServiceDate != "") {
+      arguments.add("--serviceDate");
+      arguments.add(overrideServiceDate);
+    }
 
     if (preview) {
       arguments.add("--dryRun");

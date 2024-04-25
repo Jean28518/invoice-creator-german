@@ -1,6 +1,6 @@
 SALUTATION;Sehr geehrte Damen und Herren,
 MESSAGE;bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer #!INVOICE-NUM bis zum #!PAY-DATE auf das angegebene Konto ein.
-HINT;Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.
+HINT;Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus.
 CLOSING;Mit freundlichen Grüßen
 SEN-COMPANY;Musterfirma
 SEN-NAME;Jean Doe

@@ -35,6 +35,10 @@ class InvoiceCreationPage extends StatelessWidget {
         ],
       ),
       contentElements: [
+        InvoiceBaseSettings(),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -154,6 +158,46 @@ class InvoiceCreationPage extends StatelessWidget {
                 ),
               )
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class InvoiceBaseSettings extends StatelessWidget {
+  InvoiceBaseSettings({
+    super.key,
+  });
+
+  TextEditingController invoiceNumberController = TextEditingController();
+  TextEditingController serviceDateController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    invoiceNumberController.text = InvoiceService.overrideInvoiceNumber;
+    serviceDateController.text = InvoiceService.overrideServiceDate;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          MintYTextField(
+            hintText: "optional (Standard: heute)",
+            title: "Rechnungsnummer",
+            onChanged: (value) {
+              InvoiceService.overrideInvoiceNumber = value;
+            },
+            controller: invoiceNumberController,
+          ),
+          MintYTextField(
+            hintText: "optional, (Standard: heute)",
+            title: "Leistungsdatum",
+            onChanged: (value) {
+              InvoiceService.overrideServiceDate = value;
+            },
+            controller: serviceDateController,
           ),
         ],
       ),

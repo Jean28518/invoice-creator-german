@@ -928,6 +928,7 @@ class MintYTextField extends StatelessWidget {
   String hintText;
   StringCallback? onChanged;
   TextEditingController? controller;
+  String title;
 
   /// If maxLines is 1, its a normal textfield, if its more, its a text area
   int maxLines;
@@ -939,7 +940,8 @@ class MintYTextField extends StatelessWidget {
       this.hintText = "",
       this.onChanged,
       this.controller,
-      this.maxLines = 1});
+      this.maxLines = 1,
+      this.title = ""});
 
   @override
   Widget build(BuildContext context) {
@@ -957,11 +959,29 @@ class MintYTextField extends StatelessWidget {
       cursorColor: MintY.currentColor,
       onChanged: (value) => onChanged?.call(value),
     );
+    List<Widget> children = [
+      textField,
+    ];
+
+    if (title != "") {
+      children.insert(
+        0,
+        Text(
+          title,
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.left,
+        ),
+      );
+      height += 23;
+    }
     return Container(
       padding: const EdgeInsets.all(4.0),
-      height: (18 * maxLines) + height - 18,
+      height: (18 * maxLines) + height - 12,
       width: width,
-      child: textField,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
     );
   }
 }

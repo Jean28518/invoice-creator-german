@@ -114,6 +114,9 @@ def main():
     # Overrice the invoice number
     parser.add_argument('--invoiceNumber', help='Invoice number if you want to override. Default: YYYY-MM-<number>', default='')
 
+    # "Leistungsdatum"
+    parser.add_argument('--serviceDate', help='Service date. Default: "today"', default='today')
+
     # Path to logo
     parser.add_argument('--logo', help='Path to the logo. Default: logo.png', default='')
 
@@ -281,6 +284,24 @@ def main():
         sen_info_description += "BIC <br>"
         sen_bic = get_value(template_lines, "BIC")
         sen_info_data += f"{sen_bic} <br>"
+    
+    sen_info_description += "<br>"
+    sen_info_data += "<br>"
+
+    # Add invoiceDate to the table in sen_info section
+    sen_info_description += "Rechnungsdatum <br>"
+    sen_info_data += f"{date} <br>"
+
+    # Add invoiceNumber to the table in sen_info section
+    sen_info_description += "Rechnungsnummer <br>"
+    sen_info_data += f"{invoice_number} <br>"
+
+    # Add serviceDate (Leistungsdatum) to the table in sen_info section
+    if args.serviceDate == "today":
+        args.serviceDate = date
+    sen_info_description += "Leistungsdatum <br>"
+    sen_info_data += f"{args.serviceDate} <br>"
+
     
 
     # Replace all keys with the values (GENERATE THE HTML FILE)
