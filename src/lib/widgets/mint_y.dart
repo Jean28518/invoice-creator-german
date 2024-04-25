@@ -929,6 +929,7 @@ class MintYTextField extends StatelessWidget {
   StringCallback? onChanged;
   TextEditingController? controller;
   String title;
+  bool focus;
 
   /// If maxLines is 1, its a normal textfield, if its more, its a text area
   int maxLines;
@@ -941,13 +942,15 @@ class MintYTextField extends StatelessWidget {
       this.onChanged,
       this.controller,
       this.maxLines = 1,
-      this.title = ""});
+      this.title = "",
+      this.focus = false});
 
   @override
   Widget build(BuildContext context) {
     TextField textField = TextField(
       maxLines: maxLines,
       controller: controller,
+      autofocus: focus,
       decoration: InputDecoration(
         fillColor: Theme.of(context).canvasColor,
         filled: true,
@@ -1082,6 +1085,7 @@ class __MintYSelectionDialogWithSearchState
                     searchTerm = value;
                   });
                 },
+                focus: true,
               ),
               Expanded(
                   child: ListView(
