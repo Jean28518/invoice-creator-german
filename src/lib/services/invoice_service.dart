@@ -108,7 +108,7 @@ class InvoiceService {
       arguments.add("--article");
       for (var element in articles) {
         String s =
-            "${element.name};${element.pricePerUnit};${element.amount};${element.summary}";
+            "${element.name};${element.pricePerUnit};${element.amount};${element.summary.replaceAll("\n", "<br>")}";
         arguments.add(s);
       }
     }
