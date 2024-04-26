@@ -185,7 +185,7 @@ class InvoiceBaseSettings extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           MintYTextField(
-            hintText: "optional (Standard: heute)",
+            hintText: "optional (wird sonst automatisch generiert)",
             title: "Rechnungsnummer",
             onChanged: (value) {
               InvoiceService.overrideInvoiceNumber = value;
