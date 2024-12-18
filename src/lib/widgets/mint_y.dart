@@ -894,8 +894,8 @@ class MintYTable extends StatelessWidget {
             child: Text(
               data[i][j].toString(),
               style: i == 0
-                  ? Theme.of(context).textTheme.headline4
-                  : Theme.of(context).textTheme.bodyText1,
+                  ? Theme.of(context).textTheme.headlineMedium
+                  : Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
           ),
