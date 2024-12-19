@@ -107,8 +107,10 @@ class TemplateSettingsPage extends StatelessWidget {
             csvKey: "CLOSING"),
         TemplateSettingWidgetTextLine(
             template: template,
-            description: "Absoluter Pfad zum Logo\n(.png, bis 150px)",
-            defaultValue: "/home/benutzer/Bilder/logo.png",
+            description: "Pfad zum Logo (png)",
+            defaultValue: "logo.png",
+            information:
+                "Logos können entweder einen absoluten Pfad beinhalten oder unter ~/Rechnungen/data/templates abgelegt werden. Im letzteren Fall reicht der Dateiname.",
             csvKey: "ICON-PATH"),
         TemplateSettingWidgetTextLine(
             template: template,

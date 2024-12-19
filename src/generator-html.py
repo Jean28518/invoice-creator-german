@@ -335,23 +335,27 @@ def main():
     f.close()
 
     logo_path = get_value(template_lines, "ICON-PATH")
+    if args.logo != "":
+        logo_path = args.logo
+    logo_path = logo_path.replace("//", "/").strip()
     print("Logo path: " + logo_path)
     print("Template Dir: " + os.path.dirname(args.template))
     # Copy logo to cache dir.
     if logo_path != "":
-        if not os.path.exists(args.logo):
+        if not os.path.exists(logo_path):
             # Try with local path directly next to the template.csv
             # Get the path of the template.csv
             template_dir = os.path.dirname(args.template)
             logo_path = template_dir + "/" + logo_path
+            logo_path = logo_path.replace("//", "/").strip()
             if not os.path.exists(logo_path):
-                print(f'Error: Could not open logo file: "{args.logo}"')
+                print(f'Error: Could not open logo file: "{logo_path}"')
                 # Copy the default logo
                 os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
             else:
-                os.system(f"cp {logo_path} {cache_dir}/logo.png")
+                os.system(f"cp \"{logo_path}\" {cache_dir}/logo.png")
         else:
-            os.system(f"cp {args.logo} {cache_dir}/logo.png")
+            os.system(f"cp \"{logo_path}\" {cache_dir}/logo.png")
     else:
         # Copy the default logo
         os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
