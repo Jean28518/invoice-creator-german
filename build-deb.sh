@@ -24,6 +24,10 @@ cp rechnungs-assistent deb/usr/bin/
 chmod +x deb/usr/bin/rechnungs-assistent
 chmod 755 deb/DEBIAN
 
+# Estimate the installed size by summing the sizes of all files in the deb directory
+SIZE=$(du -s deb | cut -f1)
+sed -i "s/Installed-Size: .*/Installed-Size: $SIZE/" deb/DEBIAN/control
+
 # Build deb package
 sed -i "2s/.*/Version: $VERSION/" deb/DEBIAN/control
 dpkg-deb --build -Zxz --root-owner-group deb
