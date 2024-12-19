@@ -154,8 +154,14 @@ def main():
     invoice_dir = args.invoiceDir + "/" + current_year + "/" + current_month
     if not os.path.exists(invoice_dir):
         os.makedirs(invoice_dir)
-    # Generate invoice number from amount of files in the invoice folder Format: YYYY-MM-<number>
-    number = len(os.listdir(invoice_dir)) + 1
+    # Generate invoice number from amount of .pdf files in the invoice folder Format: YYYY-MM-<number>
+    # Get all files in the invoice directory
+    files = os.listdir(invoice_dir)
+    # Check every file for .pdf
+    number = 1
+    for file in files:
+        if file.endswith(".pdf"):
+            number += 1
     invoice_number = datetime.datetime.now().strftime("%Y-%m-") + str(number)
     if args.invoiceNumber != "":
         invoice_number = args.invoiceNumber
