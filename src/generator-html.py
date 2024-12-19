@@ -101,8 +101,6 @@ def main():
 
     # Add article arguments with price, amount and description
     parser.add_argument('--article', nargs='+', help='One or more articles. Format: --article "<description>;<pricePerUnit>;<amount>;<summary>" "<description>;<pricePerUnit>;<amount>;<summary>"')
-    # Expense arguments
-    parser.add_argument('--expense', nargs='+', help='One or more expenses. Format: --expense "<description>;<price>" "<description>;<price>"')
     # Discount
     parser.add_argument('--discount', help='Discount in euro. Format: --discount "Discount;25"')
 
@@ -176,18 +174,7 @@ def main():
                 sys.exit(1)
             articles.append(segments)
 
-    # Get Expenses
-    expenses = []
-    expenses_string_list = args.expense
-    if expenses_string_list != None:
-        for expense_string in expenses_string_list:
-            # Parse the expense
-            segments = expense_string.split(";")
-            if len(segments) != 2:
-                print(f'Error: Wrong format for expense: "{expense_string}". Use: --expense "<description>;<price>" "<description>;<price>"')
-                sys.exit(1)
-            expenses.append(segments)
-    
+     
     # Get Discount
     discounts = []
     discount_string = args.discount
@@ -214,9 +201,6 @@ def main():
             description = f'<br>{article[3]}'
         table_html += f'<tr><td class="invoice-item-name"><strong>{article[0]}</strong>{description}</td><td>{convert_to_euro_string(template_lines, article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(template_lines, float(article[1]) * float(article[2]))}</td></tr>\n'
 
-    for expense in expenses:
-        table_html += f'<tr><td class="invoice-item-name">{expense[0]}</td><td> - </td><td> - </td><td>{convert_to_euro_string(template_lines, expense[1])}</td></tr>\n'
-
     for discount in discounts:
         table_html += f'<tr><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>- {convert_to_euro_string(template_lines, discount[1])}</td></tr>\n'
     
@@ -225,9 +209,6 @@ def main():
     for article in articles:
         # Article price per unit * amount
         sum_netto += float(article[1]) * float(article[2])
-    for expense in expenses:
-        # Expense price
-        sum_netto += float(expense[1])
     for discount in discounts:
         # Discount price
         sum_netto -= float(discount[1])
@@ -383,7 +364,183 @@ def main():
         chromium_exec = "chromium"
 
 
-    os.system(f"{chromium_exec} --no-sandbox --headless --disable-gpu --print-to-pdf={print_path} --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
+    os.system(f"{chromium_exec} --no-sandbox --headless --disable-gpu --print-to-pdf={cache_dir}/invoice.pdf --no-margins --no-pdf-header-footer  file://{cache_dir}/invoice.html ")
+
+    currency = get_value(template_lines, "CURRENCY", "€")
+    if currency == "€":
+        currency = "EUR"
+    elif currency == "$":
+        currency = "USD"
+
+    invoice_message = get_value(template_lines, "MESSAGE", "")
+    invoice_message = invoice_message.replace("#!INVOICE-NUM", invoice_number)
+    invoice_message = invoice_message.replace("#!PAY-DATE", payment_date)
+
+    lines = []
+
+    lines.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+    lines.append("<rsm:CrossIndustryInvoice xmlns:rsm=\"urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100\" xmlns:qdt=\"urn:un:unece:uncefact:data:standard:QualifiedDataType:100\" xmlns:ram=\"urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:udt=\"urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100\">\n")
+    lines.append("  <rsm:ExchangedDocumentContext>\n")
+    lines.append("    <ram:GuidelineSpecifiedDocumentContextParameter>\n")
+    lines.append("      <ram:ID>urn:cen.eu:en16931:2017</ram:ID>\n")
+    lines.append("    </ram:GuidelineSpecifiedDocumentContextParameter>\n")
+    lines.append("  </rsm:ExchangedDocumentContext>\n")
+    lines.append("  <rsm:ExchangedDocument>\n")
+    lines.append("    <ram:IncludedNote>\n")
+    lines.append("      <ram:Content>" + invoice_message + "</ram:Content>\n")
+    lines.append("    </ram:IncludedNote>\n")
+    lines.append("    <ram:ID>" + invoice_number + "</ram:ID>\n")
+    lines.append("    <ram:TypeCode>380</ram:TypeCode>\n")
+    lines.append("    <ram:IssueDateTime>\n")
+    lines.append("      <udt:DateTimeString format=\"102\">" + datetime.datetime.now().strftime("%Y%m%d") + "</udt:DateTimeString>\n")
+    lines.append("    </ram:IssueDateTime>\n")
+    lines.append("  </rsm:ExchangedDocument>\n")
+    lines.append("  <rsm:SupplyChainTradeTransaction>\n")
+    lines.append("    <ram:ApplicableHeaderTradeAgreement>\n")
+    lines.append("      <ram:SellerTradeParty>\n")
+    lines.append("        <ram:ID></ram:ID>\n")
+    lines.append("        <ram:GlobalID schemeID=\"0088\"></ram:GlobalID>\n")
+    lines.append("        <ram:Name>" + sen_company + "</ram:Name>\n")
+    lines.append("        <ram:PostalTradeAddress>\n")
+    lines.append("          <ram:PostcodeCode>" + sen_zip + "</ram:PostcodeCode>\n")
+    lines.append("          <ram:LineOne>" + sen_street + "</ram:LineOne>\n")
+    lines.append("          <ram:CityName>" + sen_city + "</ram:CityName>\n")
+    lines.append("          <ram:CountryID></ram:CountryID>\n")
+    lines.append("        </ram:PostalTradeAddress>\n")
+    lines.append("        <ram:SpecifiedTaxRegistration>\n")
+    lines.append("          <ram:ID schemeID=\"FC\">" + sen_tax_id + "</ram:ID>\n")
+    lines.append("        </ram:SpecifiedTaxRegistration>\n")
+    lines.append("        <ram:SpecifiedTaxRegistration>\n")
+    lines.append("          <ram:ID schemeID=\"VA\">" + sen_tax_id + "</ram:ID>\n")
+    lines.append("        </ram:SpecifiedTaxRegistration>\n")
+    lines.append("      </ram:SellerTradeParty>\n")
+
+    customer_name = (args.customerCompany + " " + args.customerName).strip()
+    lines.append("  <ram:BuyerTradeParty>\n")
+    lines.append("    <ram:ID></ram:ID>\n")
+    lines.append("    <ram:Name>" + customer_name + "</ram:Name>\n")
+    lines.append("    <ram:PostalTradeAddress>\n")
+    lines.append("      <ram:PostcodeCode>" + args.customerZIP + "</ram:PostcodeCode>\n")
+    lines.append("      <ram:LineOne>" + args.customerStreet + "</ram:LineOne>\n")
+    lines.append("      <ram:CityName>" + args.customerCity + "</ram:CityName>\n")
+    lines.append("      <ram:CountryID></ram:CountryID>\n")
+    lines.append("    </ram:PostalTradeAddress>\n")
+    lines.append("  </ram:BuyerTradeParty>\n")
+
+    lines.append("    </ram:ApplicableHeaderTradeAgreement>\n")
+    lines.append("    <ram:ApplicableHeaderTradeSettlement>\n")
+    lines.append("      <ram:InvoiceCurrencyCode>" + currency + "</ram:InvoiceCurrencyCode>\n")
+    lines.append("      <ram:ApplicableTradeTax>\n")
+    lines.append("        <ram:CalculatedAmount>" + str(vat_sum) + "</ram:CalculatedAmount>\n")
+    lines.append("        <ram:TypeCode>VAT</ram:TypeCode>\n")
+    lines.append("        <ram:BasisAmount>" + str(sum_netto) + "</ram:BasisAmount>\n")
+    lines.append("        <ram:CategoryCode>S</ram:CategoryCode>\n")
+    lines.append("        <ram:RateApplicablePercent>" + str(vat) + "</ram:RateApplicablePercent>\n")
+    lines.append("      </ram:ApplicableTradeTax>\n")
+    lines.append("      <ram:SpecifiedTradeSettlementHeaderMonetarySummation>\n")
+    lines.append("        <ram:LineTotalAmount>" + str(sum_brutto) + "</ram:LineTotalAmount>\n")
+    lines.append("        <ram:ChargeTotalAmount>0.00</ram:ChargeTotalAmount>\n")
+    lines.append("        <ram:AllowanceTotalAmount>0.00</ram:AllowanceTotalAmount>\n")
+    lines.append("        <ram:TaxBasisTotalAmount>" + str(sum_netto) + "</ram:TaxBasisTotalAmount>\n")
+    lines.append("        <ram:TaxTotalAmount currencyID=\"" + currency + "\">" + str(vat_sum) + "</ram:TaxTotalAmount>\n")
+    lines.append("        <ram:GrandTotalAmount>" + str(sum_brutto) + "</ram:GrandTotalAmount>\n")
+    lines.append("        <ram:TotalPrepaidAmount>0.00</ram:TotalPrepaidAmount>\n")
+    lines.append("        <ram:DuePayableAmount>" + str(sum_brutto) + "</ram:DuePayableAmount>\n")
+    lines.append("      </ram:SpecifiedTradeSettlementHeaderMonetarySummation>\n")
+    lines.append("      <ram:SpecifiedTradeSettlementFinancialCard>\n")
+    lines.append("        <ram:ID schemeID=\"IBAN\">" + sen_iban + "</ram:ID>\n")
+    lines.append("        <ram:CardholderName>" + sen_company + "</ram:CardholderName>\n")
+    lines.append("      </ram:SpecifiedTradeSettlementFinancialCard>\n")
+    lines.append("      <ram:SpecifiedTradeSettlementPaymentMeans>\n")
+    lines.append("        <ram:TypeCode>58</ram:TypeCode>\n")
+    lines.append("        <ram:Information>Zahlung per SEPA Überweisung.</ram:Information>\n")
+    lines.append("        <ram:PayeePartyCreditorFinancialAccount>\n")
+    lines.append("          <ram:IBANID>" + sen_iban + "</ram:IBANID>\n")
+    lines.append("          <ram:AccountName>" + sen_company + "</ram:AccountName>\n")
+    lines.append("        </ram:PayeePartyCreditorFinancialAccount>\n")
+    lines.append("        <ram:PayeeSpecifiedCreditorFinancialInstitution>\n")
+    lines.append("          <ram:BICID>" + sen_bic + "</ram:BICID>\n")
+    lines.append("        </ram:PayeeSpecifiedCreditorFinancialInstitution>\n")
+    lines.append("      </ram:SpecifiedTradeSettlementPaymentMeans>\n")
+    lines.append("      <ram:SpecifiedTradePaymentTerms>\n")
+    lines.append("        <ram:DueDateDateTime>\n")
+    lines.append("          <udt:DateTimeString format=\"102\">" + (datetime.datetime.now() + datetime.timedelta(days=int(args.paymentDays))).strftime("%Y%m%d") + "</udt:DateTimeString>\n")
+    lines.append("        </ram:DueDateDateTime>\n")
+    lines.append("      </ram:SpecifiedTradePaymentTerms>\n")
+    lines.append("    </ram:ApplicableHeaderTradeSettlement>\n")
+    lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
+    print(articles)
+    for article in articles:
+        lines.append("      <ram:AssociatedDocumentLineDocument>\n")
+        lines.append("        <ram:LineID>" + str(articles.index(article) + 1) + "</ram:LineID>\n")
+        lines.append("      </ram:AssociatedDocumentLineDocument>\n")
+        lines.append("      <ram:SpecifiedTradeProduct>\n")
+        lines.append("        <ram:Name>" + str(article[0]) + "</ram:Name>\n")
+        lines.append("      </ram:SpecifiedTradeProduct>\n")
+        lines.append("      <ram:SpecifiedLineTradeAgreement>\n")
+        lines.append("        <ram:GrossPriceProductTradePrice>\n")
+        lines.append("          <ram:ChargeAmount>" + str(article[1]) + "</ram:ChargeAmount>\n")
+        lines.append("        </ram:GrossPriceProductTradePrice>\n")
+        lines.append("        <ram:NetPriceProductTradePrice>\n")
+        lines.append("          <ram:ChargeAmount>" + str(article[1]) + "</ram:ChargeAmount>\n")
+        lines.append("        </ram:NetPriceProductTradePrice>\n")
+        lines.append("      </ram:SpecifiedLineTradeAgreement>\n")
+        lines.append("      <ram:SpecifiedLineTradeDelivery>\n")
+        lines.append("        <ram:BilledQuantity unitCode=\"H87\">" + str(article[2]) + "</ram:BilledQuantity>\n")
+        lines.append("      </ram:SpecifiedLineTradeDelivery>\n")
+        lines.append("      <ram:SpecifiedLineTradeSettlement>\n")
+        lines.append("        <ram:ApplicableTradeTax>\n")
+        lines.append("          <ram:TypeCode>VAT</ram:TypeCode>\n")
+        lines.append("          <ram:CategoryCode>S</ram:CategoryCode>\n")
+        lines.append("          <ram:RateApplicablePercent>" + str(vat) + "</ram:RateApplicablePercent>\n")
+        lines.append("        </ram:ApplicableTradeTax>\n")
+        lines.append("        <ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
+        lines.append("          <ram:LineTotalAmount>" + str(float(article[1]) * float(article[2])) + "</ram:LineTotalAmount>\n")
+        lines.append("        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
+        lines.append("      </ram:SpecifiedLineTradeSettlement>\n")
+    print(discounts)
+    for discount in discounts:
+        lines.append("      <ram:AssociatedDocumentLineDocument>\n")
+        lines.append("        <ram:LineID>" + str(discounts.index(discount) + 1) + "</ram:LineID>\n")
+        lines.append("      </ram:AssociatedDocumentLineDocument>\n")
+        lines.append("      <ram:SpecifiedTradeProduct>\n")
+        lines.append("        <ram:Name>" + str(discount[0]) + "</ram:Name>\n")
+        lines.append("      </ram:SpecifiedTradeProduct>\n")
+        lines.append("      <ram:SpecifiedLineTradeAgreement>\n")
+        lines.append("        <ram:GrossPriceProductTradePrice>\n")
+        lines.append("          <ram:ChargeAmount>-" + str(discount[1]) + "</ram:ChargeAmount>\n")
+        lines.append("        </ram:GrossPriceProductTradePrice>\n")
+        lines.append("        <ram:NetPriceProductTradePrice>\n")
+        lines.append("          <ram:ChargeAmount>-" + str(discount[1]) + "</ram:ChargeAmount>\n")
+        lines.append("        </ram:NetPriceProductTradePrice>\n")
+        lines.append("      </ram:SpecifiedLineTradeAgreement>\n")
+        lines.append("      <ram:SpecifiedLineTradeSettlement>\n")
+        lines.append("        <ram:ApplicableTradeTax>\n")
+        lines.append("          <ram:TypeCode>VAT</ram:TypeCode>\n")
+        lines.append("          <ram:CategoryCode>S</ram:CategoryCode>\n")
+        lines.append("          <ram:RateApplicablePercent>" + str(vat) + "</ram:RateApplicablePercent>\n")
+        lines.append("        </ram:ApplicableTradeTax>\n")
+        lines.append("        <ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
+        lines.append("          <ram:LineTotalAmount>-" + str(discount[1]) + "</ram:LineTotalAmount>\n")
+        lines.append("        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
+        lines.append("      </ram:SpecifiedLineTradeSettlement>\n")
+    lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
+    lines.append("  </rsm:SupplyChainTradeTransaction>\n")
+    lines.append("</rsm:CrossIndustryInvoice>\n")
+    
+    f = open(f"{cache_dir}/invoice.xml", "w")
+    f.writelines(lines)
+
+    # Now we need to add the .xml file to the .pdf file
+    # Giving up here because we currently can't generate a valid pdf/a-3 file
+
+    # Copy the pdf to the invoice directory
+    os.system(f"cp {cache_dir}/invoice.pdf {print_path}")
+    # Copy the xml to the invoice directory
+    os.system(f"cp {cache_dir}/invoice.xml {invoice_dir}/Rechnung-{invoice_number}.xml")
+
+
+
     print("InvoicePath: " + print_path)
     pass
 

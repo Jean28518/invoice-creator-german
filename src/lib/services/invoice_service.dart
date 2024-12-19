@@ -113,17 +113,6 @@ class InvoiceService {
       }
     }
 
-    // Add expenses
-    var expenses = invoiceElements
-        .where((element) => element.type == InvoiceElementType.expense);
-    if (expenses.isNotEmpty) {
-      arguments.add("--expense");
-      for (var element in expenses) {
-        String s = "${element.name};${element.price}";
-        arguments.add(s);
-      }
-    }
-
     // Add discount
     var discount = invoiceElements
         .where((element) => element.type == InvoiceElementType.discount);
@@ -134,6 +123,9 @@ class InvoiceService {
         arguments.add(s);
       }
     }
+
+    // Print the whole command for debugging
+    print("/usr/bin/python3 ${arguments.join(" ")}");
 
     var result = await Process.run("/usr/bin/python3", arguments);
 

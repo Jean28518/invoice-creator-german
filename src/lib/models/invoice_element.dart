@@ -12,7 +12,7 @@ class InvoiceElement {
   /// only used by article
   double amount = 0.0;
 
-  /// only used by expense and discount
+  /// only used by discount
   double price = 0.0;
 
   /// The "real" description. Used for articles
@@ -33,6 +33,5 @@ class InvoiceElement {
 
 enum InvoiceElementType {
   article,
-  expense,
   discount,
 }

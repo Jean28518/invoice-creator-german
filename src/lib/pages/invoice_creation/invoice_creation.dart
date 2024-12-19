@@ -321,11 +321,7 @@ class InvoiceElementCreationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        ArticleCreationWidget(),
-        ExpenseCreationWidget(),
-        DiscountCreationWidget()
-      ],
+      children: [ArticleCreationWidget(), DiscountCreationWidget()],
     );
   }
 }
@@ -402,94 +398,6 @@ class DiscountCreationWidget extends StatelessWidget {
                   discountPriceController.clear();
 
                   // Update the invoice element table with the key
-                  final state = invoiceElementTableWidgetKey.currentState;
-                  if (state != null) {
-                    state.update();
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ExpenseCreationWidget extends StatelessWidget {
-  ExpenseCreationWidget({
-    super.key,
-  });
-
-  // Define strings for the textfields
-  String expenseName = "";
-  double expensePrice = 0;
-
-  // Define controllers for the textfields
-  TextEditingController expenseNameController = TextEditingController();
-  TextEditingController expensePriceController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Container(
-              width: 250,
-              child: Text(
-                "Neue Aufwendung",
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              child: MintYTextField(
-                hintText: "Aufwendungsbeschreibung",
-                width: 500,
-                onChanged: (p0) => {
-                  expenseName = p0,
-                },
-                controller: expenseNameController,
-              ),
-            ),
-            MintYTextField(
-              hintText: "Preis",
-              width: 100,
-              onChanged: (p0) => {
-                expensePrice = parseDouble(p0),
-              },
-              controller: expensePriceController,
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: MintYButton(
-                text: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                color: MintY.currentColor,
-                onPressed: () {
-                  // if expense is 0 or name is empty, do nothing
-                  if (expensePrice == 0 || expenseName == "") {
-                    return;
-                  }
-
-                  // add the expense to the invoice elements
-                  InvoiceService.invoiceElements.add(
-                    InvoiceElement(
-                      name: expenseName,
-                      price: expensePrice,
-                      type: InvoiceElementType.expense,
-                    ),
-                  );
-
-                  // clear the textfields
-                  expenseNameController.clear();
-                  expensePriceController.clear();
-
-                  // update the invoice element table widget
                   final state = invoiceElementTableWidgetKey.currentState;
                   if (state != null) {
                     state.update();
