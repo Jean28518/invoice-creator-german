@@ -543,7 +543,8 @@ def main():
     # Copy the pdf to the invoice directory
     os.system(f"cp {cache_dir}/invoice.pdf {print_path}")
     # Copy the xml to the invoice directory
-    os.system(f"cp {cache_dir}/invoice.xml {invoice_dir}/Rechnung-{invoice_number}.xml")
+    print_path_xml = print_path.replace(".pdf", ".xml")
+    os.system(f"cp {cache_dir}/invoice.xml {print_path_xml}")
 
 
 
