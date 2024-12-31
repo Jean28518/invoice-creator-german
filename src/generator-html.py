@@ -540,6 +540,7 @@ def main():
     
     f = open(f"{cache_dir}/invoice.xml", "w")
     f.writelines(lines)
+    f.close()
 
     # Now we need to add the .xml file to the .pdf file
     # Giving up here because we currently can't generate a valid pdf/a-3 file
