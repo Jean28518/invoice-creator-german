@@ -478,9 +478,9 @@ def main():
     lines.append("        </ram:DueDateDateTime>\n")
     lines.append("      </ram:SpecifiedTradePaymentTerms>\n")
     lines.append("    </ram:ApplicableHeaderTradeSettlement>\n")
-    lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
     print(articles)
     for article in articles:
+        lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
         lines.append("      <ram:AssociatedDocumentLineDocument>\n")
         lines.append("        <ram:LineID>" + str(articles.index(article) + 1) + "</ram:LineID>\n")
         lines.append("      </ram:AssociatedDocumentLineDocument>\n")
@@ -508,8 +508,10 @@ def main():
         lines.append("          <ram:LineTotalAmount>" + str(float(article[1]) * float(article[2])) + "</ram:LineTotalAmount>\n")
         lines.append("        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
         lines.append("      </ram:SpecifiedLineTradeSettlement>\n")
+        lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
     print(discounts)
     for discount in discounts:
+        lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
         lines.append("      <ram:AssociatedDocumentLineDocument>\n")
         lines.append("        <ram:LineID>" + str(discounts.index(discount) + 1) + "</ram:LineID>\n")
         lines.append("      </ram:AssociatedDocumentLineDocument>\n")
@@ -534,7 +536,7 @@ def main():
         lines.append("          <ram:LineTotalAmount>-" + str(discount[1]) + "</ram:LineTotalAmount>\n")
         lines.append("        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
         lines.append("      </ram:SpecifiedLineTradeSettlement>\n")
-    lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
+        lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
     lines.append("  </rsm:SupplyChainTradeTransaction>\n")
     lines.append("</rsm:CrossIndustryInvoice>\n")
     
