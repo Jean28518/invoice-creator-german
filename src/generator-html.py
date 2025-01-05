@@ -228,69 +228,105 @@ def main():
     sen_info_description = ""
     sen_info_data = ""
     if is_key_present(template_lines, "SEN-COMPANY"):
-        sen_info_description += "<br>"
-        sen_company = get_value(template_lines, "SEN-COMPANY")
-        sen_info_data += f"<strong>{sen_company}</strong> <br>"
-
+        sen_company = get_value(template_lines, "SEN-COMPANY").strip()
+        sen_info_description +=  """  <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;"></td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;"><strong>{sen_company}</strong></td> \n"""
+        sen_info_description +=  """      </tr> \n"""
     if is_key_present(template_lines, "SEN-NAME") and is_key_present(template_lines, "SEN-STREET") and is_key_present(template_lines, "SEN-CITY"):
-        sen_info_description += "Anschrift <br> <br> <br> <br>"
-        sen_name = get_value(template_lines, "SEN-NAME")
-        sen_name = get_value(template_lines, "SEN-NAME")
-        sen_street = get_value(template_lines, "SEN-STREET")
-        sen_zip = get_value(template_lines, "SEN-ZIP")
-        sen_city = get_value(template_lines, "SEN-CITY")
-        sen_info_data += f"{sen_name} <br> {sen_street} <br> {sen_zip} {sen_city} <br> <br>"
+        sen_name = get_value(template_lines, "SEN-NAME").strip()
+        sen_street = get_value(template_lines, "SEN-STREET").strip()
+        sen_zip = get_value(template_lines, "SEN-ZIP").strip()
+        sen_city = get_value(template_lines, "SEN-CITY").strip()
+        sen_info_description +=  """      <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;">Anschrift</td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;">{sen_name}<br>{sen_street}<br>{sen_zip} {sen_city}</td> \n"""
+        sen_info_description +=  """      </tr> \n"""
     if is_key_present(template_lines, "SEN-EMAIL"):
-        sen_info_description += "E-Mail <br>"
-        sen_email = get_value(template_lines, "SEN-EMAIL")
-        sen_info_data += f"<a style=\"color: grey; text-decoration: none;\" href=\"mailto:{sen_email}\">{sen_email}</a> <br>"
+        sen_email = get_value(template_lines, "SEN-EMAIL").strip()
+        sen_info_description +=  """      <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;">E-Mail</td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;"><a style=\"color: grey; text-decoration: none;\" href=\"mailto:{sen_email}\">{sen_email}</a></td> \n"""
+        sen_info_description +=  """      </tr> \n"""
     if is_key_present(template_lines, "SEN-PHONE"):
-        sen_info_description += "Telefon <br>"
-        sen_phone = get_value(template_lines, "SEN-PHONE")
-        sen_info_data += f"<a style=\"color: grey; text-decoration: none;\" href=\"tel:{sen_phone}\">{sen_phone}</a> <br>"
+        sen_phone = get_value(template_lines, "SEN-PHONE").strip()
+        sen_info_description +=  """      <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;">Telefon</td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;"><a style=\"color: grey; text-decoration: none;\" href=\"tel:{sen_phone}\">{sen_phone}</a></td> \n"""
+        sen_info_description +=  """      </tr> \n"""
     if is_key_present(template_lines, "SEN-WEBSITE"):
-        sen_info_description += "Website <br>"
-        sen_website = get_value(template_lines, "SEN-WEBSITE")
-        sen_info_data += f"<a style=\"color: grey; text-decoration: none;\" href=\"https://{sen_website}\">{sen_website}</a> <br>"
-    sen_info_description += "<br>"
-    sen_info_data += "<br>"
+        sen_website = get_value(template_lines, "SEN-WEBSITE").strip()
+        sen_info_description +=  """      <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;">Website</td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;"><a style=\"color: grey; text-decoration: none;\" href=\"https://{sen_website}\">{sen_website}</a></td> \n"""
+        sen_info_description +=  """      </tr> \n"""
+    sen_info_description +=  """      <tr> \n"""
+    sen_info_description +=  """        <td style="text-align: right;">&nbsp;</td> \n"""
+    sen_info_description += f"""        <td style="text-align: left;">&nbsp;</td> \n"""
+    sen_info_description +=  """      </tr> \n"""
     if is_key_present(template_lines, "SEN-TAX-ID"):
-        sen_info_description += "Ust-IdNr. <br>"
-        sen_tax_id = get_value(template_lines, "SEN-TAX-ID")
-        sen_info_data += f"{sen_tax_id} <br>"
-    sen_info_description += "<br>"
-    sen_info_data += "<br>"
+        sen_tax_id = get_value(template_lines, "SEN-TAX-ID").strip()
+        sen_info_description +=  """      <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;">Ust-IdNr.</td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;">{sen_tax_id}</td> \n"""
+        sen_info_description +=  """      </tr> \n"""
+    sen_info_description +=  """      <tr> \n"""
+    sen_info_description +=  """        <td style="text-align: right;">&nbsp;</td> \n"""
+    sen_info_description += f"""        <td style="text-align: left;">&nbsp;</td> \n"""
+    sen_info_description +=  """      </tr> \n"""
+
     if is_key_present(template_lines, "MONEY-INSTITUTE"):
-        sen_info_description += "Institut <br>"
-        sen_money_institute = get_value(template_lines, "MONEY-INSTITUTE")
-        sen_info_data += f"{sen_money_institute} <br>"
+        sen_money_institute = get_value(template_lines, "MONEY-INSTITUTE").strip()
+        sen_info_description +=  """      <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;">Institut</td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;">{sen_money_institute}</td> \n"""
+        sen_info_description +=  """      </tr> \n"""
     if is_key_present(template_lines, "IBAN"):
-        sen_info_description += "IBAN <br>"
-        sen_iban = get_value(template_lines, "IBAN")
-        sen_info_data += f"{sen_iban} <br>"
+        sen_iban = get_value(template_lines, "IBAN").strip()
+        sen_info_description +=  """      <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;">IBAN</td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;">{sen_iban}</td> \n"""
+        sen_info_description +=  """      </tr> \n"""
     if is_key_present(template_lines, "BIC"):
-        sen_info_description += "BIC <br>"
-        sen_bic = get_value(template_lines, "BIC")
-        sen_info_data += f"{sen_bic} <br>"
-    
-    sen_info_description += "<br>"
-    sen_info_data += "<br>"
+        sen_bic = get_value(template_lines, "BIC").strip()
+        sen_info_description +=  """      <tr> \n"""
+        sen_info_description +=  """        <td style="text-align: right;">BIC</td> \n"""
+        sen_info_description += f"""        <td style="text-align: left;">{sen_bic}</td> \n"""
+        sen_info_description +=  """      </tr> \n"""
+    sen_info_description +=  """      <tr> \n"""
+    sen_info_description +=  """        <td style="text-align: right;">&nbsp;</td> \n"""
+    sen_info_description += f"""        <td style="text-align: left;">&nbsp;</td> \n"""
+    sen_info_description +=  """      </tr> \n"""
 
     # Add invoiceDate to the table in sen_info section
-    sen_info_description += "Rechnungsdatum <br>"
-    sen_info_data += f"{date} <br>"
+    sen_info_description +=  """      <tr> \n"""
+    sen_info_description +=  """        <td style="text-align: right;">Rechnungsdatum</td> \n"""
+    sen_info_description += f"""        <td style="text-align: left;">{date}</td> \n"""
+    sen_info_description +=  """      </tr> \n"""
 
     # Add invoiceNumber to the table in sen_info section
-    sen_info_description += "Rechnungsnummer <br>"
-    sen_info_data += f"{invoice_number} <br>"
+    sen_info_description +=  """      <tr> \n"""
+    sen_info_description +=  """        <td style="text-align: right;">Rechnungsnummer</td> \n"""
+    sen_info_description += f"""        <td style="text-align: left;">{invoice_number}</td> \n"""
+    sen_info_description +=  """      </tr> \n"""
 
     # Add serviceDate (Leistungsdatum) to the table in sen_info section
     if args.serviceDate == "today":
         args.serviceDate = date
-    sen_info_description += "Leistungsdatum <br>"
-    sen_info_data += f"{args.serviceDate} <br>"
+    sen_info_description +=  """      <tr> \n"""
+    sen_info_description +=  """        <td style="text-align: right;">Leistungsdatum</td> \n"""
+    sen_info_description += f"""        <td style="text-align: left;">{args.serviceDate}</td> \n"""
+    sen_info_description +=  """      </tr> \n"""
 
-    
+    # Add two rows as space after the table
+    sen_info_description +=  """      <tr> \n"""
+    sen_info_description +=  """        <td style="text-align: right;">&nbsp;</td> \n"""
+    sen_info_description += f"""        <td style="text-align: left;">&nbsp;</td> \n"""
+    sen_info_description +=  """      </tr> \n"""
+    sen_info_description +=  """      <tr> \n"""
+    sen_info_description +=  """        <td style="text-align: right;">&nbsp;</td> \n"""
+    sen_info_description += f"""        <td style="text-align: left;">&nbsp;</td> \n"""
+    sen_info_description +=  """      </tr> \n"""
 
     # Replace all keys with the values (GENERATE THE HTML FILE)
     for i in range(len(lines)):
@@ -479,10 +515,11 @@ def main():
     lines.append("      </ram:SpecifiedTradePaymentTerms>\n")
     lines.append("    </ram:ApplicableHeaderTradeSettlement>\n")
     print(articles)
+    i=0
     for article in articles:
         lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
         lines.append("      <ram:AssociatedDocumentLineDocument>\n")
-        lines.append("        <ram:LineID>" + str(articles.index(article) + 1) + "</ram:LineID>\n")
+        lines.append("        <ram:LineID>" + str(i + 1) + "</ram:LineID>\n")
         lines.append("      </ram:AssociatedDocumentLineDocument>\n")
         lines.append("      <ram:SpecifiedTradeProduct>\n")
         lines.append("        <ram:Name>" + str(article[0]) + "</ram:Name>\n")
@@ -509,11 +546,13 @@ def main():
         lines.append("        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
         lines.append("      </ram:SpecifiedLineTradeSettlement>\n")
         lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
+        i=i+1
     print(discounts)
+    i=0
     for discount in discounts:
         lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
         lines.append("      <ram:AssociatedDocumentLineDocument>\n")
-        lines.append("        <ram:LineID>" + str(discounts.index(discount) + 1) + "</ram:LineID>\n")
+        lines.append("        <ram:LineID>" + str(i + 1) + "</ram:LineID>\n")
         lines.append("      </ram:AssociatedDocumentLineDocument>\n")
         lines.append("      <ram:SpecifiedTradeProduct>\n")
         lines.append("        <ram:Name>" + str(discount[0]) + "</ram:Name>\n")
@@ -537,6 +576,7 @@ def main():
         lines.append("        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
         lines.append("      </ram:SpecifiedLineTradeSettlement>\n")
         lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
+        i=i+1
     lines.append("  </rsm:SupplyChainTradeTransaction>\n")
     lines.append("</rsm:CrossIndustryInvoice>\n")
     
@@ -560,4 +600,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

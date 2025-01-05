@@ -1,156 +1,140 @@
 <style>
-@media print {
-  @page { margin: 2cm 0cm 2cm 0cm;
-    size:210mm 297mm;
+  @media print {
+      @page:first { margin: 1cm 1cm 2.5cm 2cm;
+      size:210mm 297mm;
+    }
+
+    @page { margin: 2.5cm 1cm 2.5cm 2cm;
+      size:210mm 297mm;
+    }
   }
-}
 
-body {
+  body {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.5;
-}
-
-.container {
-  width: 100%;
-}
-
-.column {
-  width: 33.33%;
-  float: left;
-}
-
-.invoice-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: right;
-  font-size: 13px;
-}
-
-thead {
-  border-bottom: 1px solid black;
-}
-
-tfoot {
-  border-top: 1px solid black;
-}
-
-td {
+  }
+  
+  .container {
+    width: 100%;
+  }
+  
+  .column {
+    width: 33.33%;
+    float: left;
+  }
+  
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: right;
+    font-size: 13px;
+  }
+  
+  thead {
+    border-bottom: 1px solid black;
+  }
+  
+  tfoot {
+    border-top: 1px solid black;
+  }
+  
+  td {
     padding: 2px;
     vertical-align: top;
-}
-
-.invoice-item-name {
+  }
+  
+  .invoice-item-name {
     text-align: left;
-}
-
+  }
+  
 </style>
 
-<div style="padding:0cm 2cm 2cm 2cm;">
-   
-    <div class="container">
-        <div style="width: 50%; float: left;">
-            <img src="logo.png" style="height: 96px;">
-            <div style="height: 90px;"></div>
 
+<div class="container">
+  <div style="width: 50%; float: left;">
+    <img src="logo.png" style="height: 25mm;">
+    <div style="height: 10mm;"></div>
 
-            <div style="width: max-content; font-size: 10px;">
-                #!SEN-NAME - #!SEN-STREET, #!SEN-ZIP #!SEN-CITY
-                <div style="margin-top: 2px; background-color: black; height: 1px;"></div>
-            </div>
-
-            <div style="height: 10px;"></div>
-
-            <div>
-                #!REC-COMPANY <br>
-                #!REC-NAME <br>
-                #!REC-STREET <br>
-                #!REC-ZIP #!REC-CITY <br>
-            </div>
-
-        </div>
-        <div style="width: 18%; float: left; color: grey; text-align: right;">
-            <div style="height: 70px;"></div>
-            #!SEN-INFO-DESCRIPTION
-        </div>
-        <div style="width: 2%; float: left;">
-            <div style="height: 1px;"></div>
-        </div>
-        <div style="width: 30%; float: left; color: grey;">
-            <div style="height: 70px;"></div>
-            #!SEN-INFO-DATA
-        </div>
-       
+    <div style="width: max-content; font-size: 10px;">
+      #!SEN-NAME - #!SEN-STREET, #!SEN-ZIP #!SEN-CITY
+      <div style="margin-top: 2px; background-color: black; height: 1px;"></div>
     </div>
 
-    <div style="height: 330px;"></div>
+    <div style="height: 10px;"></div>
 
-    <!-- <div style="height: 100px;"></div>
-    <div style="text-align: right; font-weight: 600;">
-        #!SEN-CITY, den #!DATE<br>
-    </div> -->
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
-    <h3>Rechnung</h1>
-
-    <p>
-        #!SALUTATION
-    </p>
-
-    <p>
-        <!-- Bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (01.01.1970) bis zum 29.08.2023 auf das angegebene Konto ein. Vielen Dank für Ihr Vertrauen. -->
-        #!MESSAGE
-    </p>
-
-    <table class="invoice-table">
-        <thead>
-          <tr>
-            <th style="width: 60%; text-align: left;">Bezeichnung</th>
-            <th>Preis/Einheit</th>
-            <th>Menge</th>
-            <th>Betrag</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- <tr>
-            <td class="invoice-item-name"><strong>Product 1</strong><br>Description</td>
-            <td>$10.00</td>
-            <td>1</td>
-            <td>$10.00</td>
-          </tr> -->
-          #!ITEMS
-          <div style="page-break-inside:avoid;"></div>
-            <tr style="border-top: 1px solid;">
-              <td colspan="2">Gesamtbetrag (Netto)</td>
-              <td colspan="2">#!SUM-WITHOUT-VAT</td>
-            </tr>
-            <tr>
-              <td colspan="2">zzgl. Umsatzsteuer</td>
-              <td>#!VAT-PERCENT</td>
-              <td>#!VAT-ADDITION</td>
-            </tr>
-            <tr style="font-weight: 600;">
-              <td colspan="2">Gesamtbetrag (Brutto)</td>
-              <td colspan="2">#!SUM-WITH-VAT</td>
-            </tr>
-          </div>
-        </tbody>
-    </table>
-
-    <div style="page-break-inside:avoid;">
-      <p>
-        <!-- Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus. -->
-        #!HINT
-      </p>
-
-      #!CLOSING <br>
-      <br>
-      #!SEN-NAME
+    <div style="font-size: 13px;">
+      #!REC-COMPANY <br>
+      #!REC-NAME <br>
+      #!REC-STREET <br>
+      #!REC-ZIP #!REC-CITY <br>
     </div>
+  </div>
+
+  <table style="width: 50%; float: left; color: grey; border-spacing: 2.5mm 0; padding: 13mm 0mm 0mm 0mm; font-size: 13px;">
+    #!SEN-INFO-DESCRIPTION
+  </table>
 </div>
 
+<!--
+<div style="text-align: right; font-weight: 600;">
+  Eggenfelden, den 05.01.2025<br>
+</div>
+-->
 
+<h3>Rechnung</h1>
+
+<p>
+  #!SALUTATION
+</p>
+
+<p>
+  <!-- Bitte zahlen Sie den unten aufgeführten Gesamtbetrag unter Angabe der Rechnungsnummer (01.01.1970) bis zum 29.08.2023 auf das angegebene Konto ein. Vielen Dank für Ihr Vertrauen. -->
+  #!MESSAGE
+</p>
+
+<table class="invoice-table">
+  <thead>
+    <tr>
+      <th style="width: 60%; text-align: left;">Bezeichnung</th>
+      <th>Preis/Einheit</th>
+      <th>Menge</th>
+      <th>Betrag</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- <tr>
+      <td class="invoice-item-name"><strong>Product 1</strong><br>Description</td>
+      <td>$10.00</td>
+      <td>1</td>
+      <td>$10.00</td>
+    </tr> -->
+    #!ITEMS
+    <div style="page-break-inside:avoid;">
+      <tr style="border-top: 1px solid;">
+        <td colspan="2">Gesamtbetrag (Netto)</td>
+        <td colspan="2">#!SUM-WITHOUT-VAT</td>
+      </tr>
+      <tr>
+        <td colspan="2">zzgl. Umsatzsteuer</td>
+        <td>#!VAT-PERCENT</td>
+        <td>#!VAT-ADDITION</td>
+      </tr>
+      <tr style="font-weight: 600;">
+        <td colspan="2">Gesamtbetrag (Brutto)</td>
+        <td colspan="2">#!SUM-WITH-VAT</td>
+      </tr>
+    </div>
+  </tbody>
+</table>
+
+<div style="page-break-inside:avoid;">
+  <p>
+    <!-- Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus. -->
+    #!HINT
+  </p>
+
+  <br>
+  #!CLOSING <br>
+  #!SEN-NAME
+</div>
