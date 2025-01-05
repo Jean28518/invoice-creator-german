@@ -1,6 +1,6 @@
 <style>
 @media print {
-  @page { margin: 0mm 0mm 0mm 0mm;
+  @page { margin: 2cm 0cm 2cm 0cm;
     size:210mm 297mm;
   }
 }
@@ -46,7 +46,7 @@ td {
 
 </style>
 
-<div style="padding: 2cm;">
+<div style="padding:0cm 2cm 2cm 2cm;">
    
     <div class="container">
         <div style="width: 50%; float: left;">
@@ -123,13 +123,12 @@ td {
             <td>$10.00</td>
           </tr> -->
           #!ITEMS
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="2">Gesamtbetrag (Netto)</td>
-            <td colspan="2">#!SUM-WITHOUT-VAT</td>
-          </tr>
-          <tr>
+          <div style="page-break-inside:avoid;"></div>
+            <tr style="border-top: 1px solid;">
+              <td colspan="2">Gesamtbetrag (Netto)</td>
+              <td colspan="2">#!SUM-WITHOUT-VAT</td>
+            </tr>
+            <tr>
               <td colspan="2">zzgl. Umsatzsteuer</td>
               <td>#!VAT-PERCENT</td>
               <td>#!VAT-ADDITION</td>
@@ -138,17 +137,20 @@ td {
               <td colspan="2">Gesamtbetrag (Brutto)</td>
               <td colspan="2">#!SUM-WITH-VAT</td>
             </tr>
-        </tfoot>
+          </div>
+        </tbody>
     </table>
 
-    <p>
+    <div style="page-break-inside:avoid;">
+      <p>
         <!-- Das Leistungsdatum entspricht dem Rechnungsdatum. Der angegebene Preis ist ein Endpreis. Gemäß 19 § UStG erhebe ich keine Umsatzsteuer und weise diese folglich auch nicht aus. -->
         #!HINT
-    </p>
+      </p>
 
-    #!CLOSING <br>
-    <br>
-    #!SEN-NAME
+      #!CLOSING <br>
+      <br>
+      #!SEN-NAME
+    </div>
 </div>
 
 
