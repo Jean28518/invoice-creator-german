@@ -205,10 +205,10 @@ def main():
         description = ""
         if article[3] != "":
             description = f'<br>{article[3]}'
-        table_html += f'<tr><td class="invoice-item-name"><strong>{article[0]}</strong>{description}</td><td>{convert_to_euro_string(template_lines, article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(template_lines, float(article[1]) * float(article[2]))}</td></tr>\n'
+        table_html += f'<tr style="page-break-inside:avoid;"><td class="invoice-item-name"><strong>{article[0]}</strong>{description}</td><td>{convert_to_euro_string(template_lines, article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(template_lines, float(article[1]) * float(article[2]))}</td></tr>\n'
 
     for discount in discounts:
-        table_html += f'<tr><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>- {convert_to_euro_string(template_lines, discount[1])}</td></tr>\n'
+        table_html += f'<tr style="page-break-inside:avoid;"><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>- {convert_to_euro_string(template_lines, discount[1])}</td></tr>\n'
     
     # Calculate sum
     sum_netto = 0
@@ -478,9 +478,9 @@ def main():
     lines.append("        </ram:DueDateDateTime>\n")
     lines.append("      </ram:SpecifiedTradePaymentTerms>\n")
     lines.append("    </ram:ApplicableHeaderTradeSettlement>\n")
-    lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
     print(articles)
     for article in articles:
+        lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
         lines.append("      <ram:AssociatedDocumentLineDocument>\n")
         lines.append("        <ram:LineID>" + str(articles.index(article) + 1) + "</ram:LineID>\n")
         lines.append("      </ram:AssociatedDocumentLineDocument>\n")
@@ -508,8 +508,10 @@ def main():
         lines.append("          <ram:LineTotalAmount>" + str(float(article[1]) * float(article[2])) + "</ram:LineTotalAmount>\n")
         lines.append("        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
         lines.append("      </ram:SpecifiedLineTradeSettlement>\n")
+        lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
     print(discounts)
     for discount in discounts:
+        lines.append("    <ram:IncludedSupplyChainTradeLineItem>\n")
         lines.append("      <ram:AssociatedDocumentLineDocument>\n")
         lines.append("        <ram:LineID>" + str(discounts.index(discount) + 1) + "</ram:LineID>\n")
         lines.append("      </ram:AssociatedDocumentLineDocument>\n")
@@ -534,7 +536,7 @@ def main():
         lines.append("          <ram:LineTotalAmount>-" + str(discount[1]) + "</ram:LineTotalAmount>\n")
         lines.append("        </ram:SpecifiedTradeSettlementLineMonetarySummation>\n")
         lines.append("      </ram:SpecifiedLineTradeSettlement>\n")
-    lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
+        lines.append("    </ram:IncludedSupplyChainTradeLineItem>\n")
     lines.append("  </rsm:SupplyChainTradeTransaction>\n")
     lines.append("</rsm:CrossIndustryInvoice>\n")
     
