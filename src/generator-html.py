@@ -4,6 +4,10 @@ import sys
 import argparse
 import datetime
 
+# set merge_pdf_and_xml = True if the prerequisites are met and the combination of pdf and xml is to be activated
+# see near the end of this script
+merge_pdf_and_xml = False
+
 # argument key , description, default value, key in html
 argkeys_customer = [
     ["customerCompany", "Name of the company" , "FirmaXYZ", "REC-COMPANY"],
@@ -160,7 +164,7 @@ def main():
     # Check every file for .pdf
     number = 1
     for file in files:
-        if file.endswith(".pdf"):
+        if file.endswith("_o.pdf"):
             number += 1
     invoice_number = datetime.datetime.now().strftime("%Y-%m-") + str(number)
     if args.invoiceNumber != "":
@@ -542,16 +546,39 @@ def main():
     f.writelines(lines)
     f.close()
 
-    # Now we need to add the .xml file to the .pdf file
-    # Giving up here because we currently can't generate a valid pdf/a-3 file
+    # Create the combined pdf+xml file
+    
+    if merge_pdf_and_xml:
+        # preconditions for this implementation
+        # - pdftops from the Poppler project (http://poppler.freedesktop.org)
+        # - gs (Ghostscript)
+        # - ../mustang-cli/Mustang-CLI-2.15.2.jar from the Mustang project (https://www.mustangproject.org)
 
-    # Copy the pdf to the invoice directory
+        # step 1: convert pdf to ps with poppler
+        os.system(f"pdftops {cache_dir}/invoice.pdf {cache_dir}/invoice.ps")
+        
+        # step 2: convert ps to pdf/a-1 with gs
+        os.system(f"rm -f {cache_dir}/invoice_a.pdf")
+        os.system(f"gs -dPDFA -dBATCH -dNOPAUSE -sColorConversionStrategy=UseDeviceIndependentColor -sDEVICE=pdfwrite -dPDFACompatibilityPolicy=1 -sOutputFile={cache_dir}/invoice_a.pdf {cache_dir}/invoice.ps")
+        
+        # step 3: combine pdf/a-1 an xml to one pdf/a-1 file with the mustang library
+        os.system(f"rm -f {cache_dir}/invoice_c.pdf")
+        os.system(f"java -Xmx1G -Dfile.encoding=UTF-8 -jar ../mustang-cli/Mustang-CLI-2.15.2.jar --action combine -source {cache_dir}/invoice_a.pdf -source-xml {cache_dir}/invoice.xml -out {cache_dir}/invoice_c.pdf -attachments '' -format zf -version 2 -profile x")
+
+    # Copy the generated files to the invoice directory
+
+    # - original pdf - gets renamed to invoice_o.pdf for the invoice number generation algorithm
+    print_path = print_path.replace(".pdf", "_o.pdf")
     os.system(f"cp {cache_dir}/invoice.pdf {print_path}")
-    # Copy the xml to the invoice directory
-    print_path_xml = print_path.replace(".pdf", ".xml")
+
+    # - original xml - gets also renamed to invoice_o.xml
+    print_path_xml = print_path.replace("_o.pdf", "_o.xml")
     os.system(f"cp {cache_dir}/invoice.xml {print_path_xml}")
 
-
+    # - combined pdf 
+    if merge_pdf_and_xml:
+        print_path = print_path.replace("_o.pdf", "_c.pdf")
+        os.system(f"cp {cache_dir}/invoice_c.pdf {print_path}")
 
     print("InvoicePath: " + print_path)
     pass
