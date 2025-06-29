@@ -1,9 +1,9 @@
 Package: rechnungs-assistent
-Version: 1.2.2
+Version: 1.3.0
 Depends: chromium | chromium-browser
 Maintainer: Jean28518
 Architecture: amd64
 Hompage: https://www.linuxguides.de/
 Section: Office
 Description: Create invoices according to German standard
-Installed-Size: 22396
+Installed-Size: 49776
