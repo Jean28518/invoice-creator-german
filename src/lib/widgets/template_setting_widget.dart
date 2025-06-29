@@ -7,50 +7,87 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
   String description = '';
   String defaultValue = '';
   String value = '';
+
+  /// csvKey is only the number if we are using this as an additional field.
   String csvKey = '';
   String information = '';
   bool displaySaveButton;
   Template template;
+  bool additionalField = false;
 
-  TemplateSettingWidgetTextLine(
-      {super.key,
-      required this.description,
-      required this.defaultValue,
-      required this.csvKey,
-      required this.template,
-      this.information = "",
-      this.displaySaveButton = true}) {
-    if (template.templateData[csvKey] != null) {
-      value = template.templateData[csvKey]!;
+  TemplateSettingWidgetTextLine({
+    super.key,
+    required this.description,
+    required this.defaultValue,
+    required this.csvKey,
+    required this.template,
+    this.information = "",
+    this.displaySaveButton = true,
+    this.additionalField = false,
+  }) {
+    if (additionalField) {
+      // if (template.templateData["custom__value_$csvKey"] != null) {
+      // If this is an additional field, we use a custom key
+      value = template.templateData["custom__value_$csvKey"] ?? "";
+      // }
+    } else {
+      // Otherwise, we use the original csvKey
+      value = template.templateData[csvKey] ?? "";
     }
   }
 
   // Controller:
-  TextEditingController controller = TextEditingController();
+  TextEditingController valueTextEditingController = TextEditingController();
+  TextEditingController descriptionTextEditingController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    controller.text = value;
+    valueTextEditingController.text = value;
+    descriptionTextEditingController.text = description;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          width: 200,
-          child: Text(
-            description,
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
+        additionalField
+            ? MintYTextField(
+                width: 200,
+                maxLines: 1,
+                hintText: "Titel",
+                onChanged: (String newDescription) {
+                  description = newDescription;
+                  template.templateData["custom__title_$csvKey"] =
+                      newDescription.replaceAll("\n", " ");
+                },
+                controller: descriptionTextEditingController,
+              )
+            : SizedBox(
+                width: 200,
+                child: Text(
+                  description,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+        const SizedBox(
+          width: 20,
         ),
         MintYTextField(
           width: 400,
           maxLines: value.length > 50 ? 8 : 1,
-          hintText: defaultValue,
+          // Only display the hint if this is not an additional field.
+          hintText: additionalField ? "" : defaultValue,
           onChanged: (String newValue) {
             value = newValue;
-            template.templateData[csvKey] = value.replaceAll("\n", " ");
+            if (additionalField) {
+              // If this is an additional field, we save it with a custom key
+              template.templateData["custom__value_$csvKey"] =
+                  value.replaceAll("\n", " ");
+            } else {
+              // Otherwise, we save it with the original csvKey
+              template.templateData[csvKey] = value.replaceAll("\n", " ");
+            }
           },
-          controller: controller,
+          controller: valueTextEditingController,
         ),
         const SizedBox(
           width: 20,
@@ -66,8 +103,32 @@ class TemplateSettingWidgetTextLine extends StatelessWidget {
                 onPressed: () {
                   // Replace new line with spaces because it will otherwise crash the .latex file
                   value = value.replaceAll("\n", " ");
-                  TemplateService.saveValue(template, csvKey, value);
-                  controller.text = value;
+                  if (additionalField) {
+                    // If this is an additional field, we save it with a custom key
+                    template.templateData["custom__value_$csvKey"] = value;
+                    template.templateData["custom__title_$csvKey"] =
+                        description;
+                    TemplateService.saveValue(
+                      template,
+                      "custom__value_$csvKey",
+                      value,
+                    );
+                    TemplateService.saveValue(
+                      template,
+                      "custom__title_$csvKey",
+                      description,
+                    );
+                  } else {
+                    // Otherwise, we save it with the original csvKey
+                    template.templateData[csvKey] = value;
+                    TemplateService.saveValue(
+                      template,
+                      csvKey,
+                      value,
+                    );
+                  }
+                  // Update the value in the text field controller
+                  valueTextEditingController.text = value;
                 },
               )
             : Container(),

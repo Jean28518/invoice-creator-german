@@ -67,6 +67,20 @@ def convert_to_euro_string(template_lines, value):
         value += "0"
     currency = get_value(template_lines, "CURRENCY", "€")
     return value + " " + currency
+
+
+def get_all_custom_fields(template_lines):
+    custom_fields = []
+    for line in template_lines:
+        if line.startswith("custom__title_"):
+            key = line.split(";")[0].replace("custom__title_", "")
+            title = line.split(";")[1].replace("\n", "")
+            value = get_value(template_lines, "custom__value_" + key, "")
+            # Continue if value is empty
+            if value == "":
+                continue
+            custom_fields.append((title, value))
+    return custom_fields
     
 
 def main():
@@ -258,6 +272,9 @@ def main():
         sen_info_description += "Ust-IdNr. <br>"
         sen_tax_id = get_value(template_lines, "SEN-TAX-ID")
         sen_info_data += f"{sen_tax_id} <br>"
+    for custom_field in get_all_custom_fields(template_lines):
+        sen_info_description += f"{custom_field[0]} <br>"
+        sen_info_data += f"{custom_field[1]} <br>"
     sen_info_description += "<br>"
     sen_info_data += "<br>"
     if is_key_present(template_lines, "MONEY-INSTITUTE"):
@@ -272,6 +289,7 @@ def main():
         sen_info_description += "BIC <br>"
         sen_bic = get_value(template_lines, "BIC")
         sen_info_data += f"{sen_bic} <br>"
+
     
     sen_info_description += "<br>"
     sen_info_data += "<br>"
@@ -410,18 +428,18 @@ def main():
     lines.append("      <ram:SellerTradeParty>\n")
     lines.append("        <ram:ID></ram:ID>\n")
     lines.append("        <ram:GlobalID schemeID=\"0088\"></ram:GlobalID>\n")
-    lines.append("        <ram:Name>" + sen_company + "</ram:Name>\n")
+    lines.append("        <ram:Name>" + get_value(template_lines, "SEN-COMPANY", "") + "</ram:Name>\n")
     lines.append("        <ram:PostalTradeAddress>\n")
-    lines.append("          <ram:PostcodeCode>" + sen_zip + "</ram:PostcodeCode>\n")
-    lines.append("          <ram:LineOne>" + sen_street + "</ram:LineOne>\n")
-    lines.append("          <ram:CityName>" + sen_city + "</ram:CityName>\n")
+    lines.append("          <ram:PostcodeCode>" + get_value(template_lines, "SEN-ZIP", "") + "</ram:PostcodeCode>\n")
+    lines.append("          <ram:LineOne>" + get_value(template_lines, "SEN-STREET", "") + "</ram:LineOne>\n")
+    lines.append("          <ram:CityName>" + get_value(template_lines, "SEN-CITY", "") + "</ram:CityName>\n")
     lines.append("          <ram:CountryID></ram:CountryID>\n")
     lines.append("        </ram:PostalTradeAddress>\n")
     lines.append("        <ram:SpecifiedTaxRegistration>\n")
-    lines.append("          <ram:ID schemeID=\"FC\">" + sen_tax_id + "</ram:ID>\n")
+    lines.append("          <ram:ID schemeID=\"FC\">" + get_value(template_lines, "SEN-TAX-ID", "") + "</ram:ID>\n")
     lines.append("        </ram:SpecifiedTaxRegistration>\n")
     lines.append("        <ram:SpecifiedTaxRegistration>\n")
-    lines.append("          <ram:ID schemeID=\"VA\">" + sen_tax_id + "</ram:ID>\n")
+    lines.append("          <ram:ID schemeID=\"VA\">" + get_value(template_lines, "SEN-VAT-ID", "") + "</ram:ID>\n")
     lines.append("        </ram:SpecifiedTaxRegistration>\n")
     lines.append("      </ram:SellerTradeParty>\n")
 
@@ -458,18 +476,18 @@ def main():
     lines.append("        <ram:DuePayableAmount>" + str(sum_brutto) + "</ram:DuePayableAmount>\n")
     lines.append("      </ram:SpecifiedTradeSettlementHeaderMonetarySummation>\n")
     lines.append("      <ram:SpecifiedTradeSettlementFinancialCard>\n")
-    lines.append("        <ram:ID schemeID=\"IBAN\">" + sen_iban + "</ram:ID>\n")
-    lines.append("        <ram:CardholderName>" + sen_company + "</ram:CardholderName>\n")
+    lines.append("        <ram:ID schemeID=\"IBAN\">" + get_value(template_lines, "IBAN", "") + "</ram:ID>\n")
+    lines.append("        <ram:CardholderName>" + get_value(template_lines, "SEN-COMPANY", "") + "</ram:CardholderName>\n")
     lines.append("      </ram:SpecifiedTradeSettlementFinancialCard>\n")
     lines.append("      <ram:SpecifiedTradeSettlementPaymentMeans>\n")
     lines.append("        <ram:TypeCode>58</ram:TypeCode>\n")
     lines.append("        <ram:Information>Zahlung per SEPA Überweisung.</ram:Information>\n")
     lines.append("        <ram:PayeePartyCreditorFinancialAccount>\n")
-    lines.append("          <ram:IBANID>" + sen_iban + "</ram:IBANID>\n")
-    lines.append("          <ram:AccountName>" + sen_company + "</ram:AccountName>\n")
+    lines.append("          <ram:IBANID>" + get_value(template_lines, "IBAN", "") + "</ram:IBANID>\n")
+    lines.append("          <ram:AccountName>" + get_value(template_lines, "SEN-COMPANY", "") + "</ram:AccountName>\n")
     lines.append("        </ram:PayeePartyCreditorFinancialAccount>\n")
     lines.append("        <ram:PayeeSpecifiedCreditorFinancialInstitution>\n")
-    lines.append("          <ram:BICID>" + sen_bic + "</ram:BICID>\n")
+    lines.append("          <ram:BICID>" + get_value(template_lines, "BIC", "") + "</ram:BICID>\n")
     lines.append("        </ram:PayeeSpecifiedCreditorFinancialInstitution>\n")
     lines.append("      </ram:SpecifiedTradeSettlementPaymentMeans>\n")
     lines.append("      <ram:SpecifiedTradePaymentTerms>\n")
