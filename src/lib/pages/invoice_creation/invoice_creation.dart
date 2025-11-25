@@ -513,6 +513,9 @@ class ArticleCreationWidget extends StatelessWidget {
                         bruttoSelection,
                       ],
                     ),
+                    Container(
+                      height: 8,
+                    ),
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
