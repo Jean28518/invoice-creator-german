@@ -57,8 +57,8 @@ def get_value(csv_lines, key, default = ""):
     return default
 
 
-def convert_to_euro_string(template_lines, value):
-    value = str(round(float(value), 2))
+def convert_to_euro_string(template_lines, value, round_digits = 2):
+    value = str(round(float(value), round_digits))
     if value.find(".") == -1:
         value += ",00"
     value = value.replace(".", ",")
@@ -114,7 +114,7 @@ def main():
 
 
     # Add article arguments with price, amount and description
-    parser.add_argument('--article', nargs='+', help='One or more articles. Format: --article "<description>;<pricePerUnit>;<amount>;<summary>" "<description>;<pricePerUnit>;<amount>;<summary>"')
+    parser.add_argument('--article', nargs='+', help='One or more articles. Format: --article "<description>;<pricePerUnit>;<amount>;<summary>;<brutto>" "<description>;<pricePerUnit>;<amount>;<summary>;<brutto>"')
     # Discount
     parser.add_argument('--discount', help='Discount in euro. Format: --discount "Discount;25"')
 
@@ -189,9 +189,15 @@ def main():
         for article_string in articles_string_list:
             # Parse the article
             segments = article_string.split(";")
-            if len(segments) != 4:
-                print(f'Error: Wrong format for article: "{article_string}". Use: --article "<description>;<pricePerUnit>;<amount>;<summary>" "<description>;<pricePerUnit>;<amount>;<summary>"')
+            if len(segments) != 5:
+                print(f'Error: Wrong format for article: "{article_string}". Use: --article "<description>;<pricePerUnit>;<amount>;<summary>;<brutto>" "<description>;<pricePerUnit>;<amount>;<summary>;<brutto>"')
                 sys.exit(1)
+
+            # Convert the pricePerUnit to netto if brutto is true
+            if segments[4].lower() == "true":
+                vat = float(get_value(template_lines, "DEFAULT-VAT"))
+                price_per_unit_netto = float(segments[1]) / (1 + vat / 100)
+                segments[1] = str(round(price_per_unit_netto, 6))
             articles.append(segments)
 
      
@@ -219,11 +225,10 @@ def main():
         description = ""
         if article[3] != "":
             description = f'<br>{article[3]}'
-        table_html += f'<tr><td class="invoice-item-name"><strong>{article[0]}</strong>{description}</td><td>{convert_to_euro_string(template_lines, article[1])}</td><td>{article[2]}</td><td>{convert_to_euro_string(template_lines, float(article[1]) * float(article[2]))}</td></tr>\n'
+        table_html += f'<tr><td class="invoice-item-name"><strong>{article[0]}</strong>{description}</td><td>{convert_to_euro_string(template_lines, article[1], 5)}</td><td>{article[2]}</td><td>{convert_to_euro_string(template_lines, float(article[1]) * float(article[2]))}</td></tr>\n'
 
     for discount in discounts:
         table_html += f'<tr><td class="invoice-item-name">{discount[0]}</td><td> - </td><td> - </td><td>- {convert_to_euro_string(template_lines, discount[1])}</td></tr>\n'
-    
     # Calculate sum
     sum_netto = 0
     for article in articles:

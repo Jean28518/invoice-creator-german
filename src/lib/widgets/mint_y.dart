@@ -1012,6 +1012,75 @@ class MintYTextField extends StatelessWidget {
   }
 }
 
+
+class MintYSelect extends StatefulWidget {
+  String selectedItem = "";
+  List<String> items;
+  StringCallback selectionCallback;
+
+  final _valueNotifier = ValueNotifier<String>("");
+
+
+  MintYSelect(
+      {super.key,
+      this.selectedItem = "",
+      required this.items,
+      required this.selectionCallback}) {
+    items.sort((a, b) => a.compareTo(b));
+  }
+
+  @override
+  State<MintYSelect> createState() => _MintYSelectState(_valueNotifier);
+
+   // This exposes the ability to change the DropdownButtons's value
+  void setDropdownValue(String value) {
+    // This will notify the state and will eventually call setState
+    _valueNotifier.value = value;
+  }
+
+}
+
+class _MintYSelectState extends State<MintYSelect> {
+
+  _MintYSelectState(ValueNotifier<String> valueNotifier) {
+    valueNotifier.addListener(() {
+      setState(() {
+        widget.selectedItem = valueNotifier.value;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: widget.selectedItem == "" ? null : widget.selectedItem,
+      hint: Text(widget.selectedItem),
+      style: Theme.of(context).textTheme.bodyMedium,
+      dropdownColor: Theme.of(context).canvasColor,
+      focusColor: Theme.of(context).canvasColor,
+      items: widget.items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          setSelectItem(newValue);
+          widget.selectionCallback.call(newValue);
+        }
+      },
+    );
+  }
+
+  void setSelectItem(String item) {
+    setState(() {
+      widget.selectedItem = item; 
+    });
+    
+  }
+}
+
 /// Its a button which pop ups a dialog with a list of items and search function
 class MintYSelectionDialogWithFilter extends StatelessWidget {
   String buttonText = "";

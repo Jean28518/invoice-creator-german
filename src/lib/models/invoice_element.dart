@@ -18,6 +18,8 @@ class InvoiceElement {
   /// The "real" description. Used for articles
   String summary = "";
 
+  bool brutto = false;
+
   /// Constructor
   InvoiceElement({
     required this.type,
@@ -26,6 +28,7 @@ class InvoiceElement {
     this.amount = 0.0,
     this.price = 0.0,
     this.summary = "",
+    this.brutto = false,
   }) {
     id = idCounter++;
   }

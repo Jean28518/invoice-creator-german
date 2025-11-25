@@ -347,9 +347,9 @@ class DiscountCreationWidget extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 250,
+              width: 100,
               child: Text(
-                "Neuer Rabatt",
+                "Rabatt",
                 style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
@@ -421,11 +421,19 @@ class ArticleCreationWidget extends StatelessWidget {
   double articlePricePerUnit = 0.0;
   double articleAmount = 0.0;
   String summary = "";
+  bool brutto = false;
 
   TextEditingController articleNameController = TextEditingController();
   TextEditingController articlePricePerUnitController = TextEditingController();
   TextEditingController articleAmountController = TextEditingController();
   TextEditingController articleSummaryController = TextEditingController();
+  late MintYSelect bruttoSelection = MintYSelect(
+    items: ["Brutto", "Netto"],
+    selectedItem: brutto ? "Brutto" : "Netto",
+    selectionCallback: (p0) {
+      brutto = p0 == "Brutto";
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -436,7 +444,7 @@ class ArticleCreationWidget extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 250,
+                width: 100,
                 child: Text(
                   "Artikel",
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -458,14 +466,7 @@ class ArticleCreationWidget extends StatelessWidget {
                             controller: articleNameController,
                           ),
                         ),
-                        MintYTextField(
-                          hintText: "Preis pro Einheit",
-                          width: 200,
-                          onChanged: (p0) {
-                            articlePricePerUnit = parseDouble(p0);
-                          },
-                          controller: articlePricePerUnitController,
-                        ),
+                       
                       ],
                     ),
                     Row(
@@ -473,14 +474,43 @@ class ArticleCreationWidget extends StatelessWidget {
                         Expanded(
                           child: MintYTextField(
                             hintText: "Artikelbeschreibung",
-                            maxLines: 4,
+                            maxLines: 2,
                             width: 100,
+                            height: 40,
                             onChanged: (p0) {
                               summary = p0;
                             },
                             controller: articleSummaryController,
                           ),
                         ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      
+                      children: [
+                       Expanded(
+                         child: MintYTextField(
+                            hintText: "Preis pro Einheit",
+                            width: 200,
+                            onChanged: (p0) {
+                              articlePricePerUnit = parseDouble(p0);
+                            },
+                            controller: articlePricePerUnitController,
+                          ),
+                       ),
+                        Expanded(
+                          child: MintYTextField(
+                          hintText: "Menge",
+                          width: 100,
+                          onChanged: (p0) {
+                            articleAmount = parseDouble(p0);
+                          },
+                          controller: articleAmountController,
+                                                ),
+                        ),
+                        bruttoSelection,
                       ],
                     ),
                     Row(
@@ -499,6 +529,8 @@ class ArticleCreationWidget extends StatelessWidget {
                                 article.pricePerUnit;
                             articlePricePerUnit =
                                 parseDouble(article.pricePerUnit);
+                            brutto = article.brutto;
+                            bruttoSelection.setDropdownValue(article.brutto ? "Brutto" : "Netto");
 
                             if (article.amount != "") {
                               articleAmountController.text = article.amount;
@@ -541,6 +573,7 @@ class ArticleCreationWidget extends StatelessWidget {
                               pricePerUnit: articlePricePerUnit.toString(),
                               amount: articleAmount.toString(),
                               summary: summary,
+                              brutto: brutto,
                             ));
                             ArticleService.save();
                           },
@@ -554,14 +587,7 @@ class ArticleCreationWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      MintYTextField(
-                        hintText: "Menge",
-                        width: 100,
-                        onChanged: (p0) {
-                          articleAmount = parseDouble(p0);
-                        },
-                        controller: articleAmountController,
-                      ),
+                      
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: MintYButton(
@@ -582,7 +608,8 @@ class ArticleCreationWidget extends StatelessWidget {
                                 name: articleName,
                                 amount: articleAmount,
                                 pricePerUnit: articlePricePerUnit,
-                                summary: summary));
+                                summary: summary,
+                                brutto: brutto));
                             articleNameController.clear();
                             articlePricePerUnitController.clear();
                             articleAmountController.clear();
@@ -600,7 +627,7 @@ class ArticleCreationWidget extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    height: 140,
+                    height: 144,
                   ),
                 ],
               ),

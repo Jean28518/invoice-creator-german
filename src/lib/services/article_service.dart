@@ -26,6 +26,7 @@ class ArticleService {
         pricePerUnit: lineSplit[1],
         amount: lineSplit[2],
         summary: lineSplit[3].replaceAll("<br>", "\n"),
+        brutto: lineSplit.length > 4 ? lineSplit[4] == "true" : false,
       );
       articles.add(article);
     }
@@ -34,10 +35,10 @@ class ArticleService {
   static void save() {
     // save articles to .csv file in config folder
     File articleFile = File("${getInvoicesDirectory()}/data/articles.csv");
-    List<String> lines = ["description;pricePerUnit;amount;summary"];
+    List<String> lines = ["description;pricePerUnit;amount;summary;brutto"];
     for (Article article in articles) {
       lines.add(
-          '${article.description};${article.pricePerUnit};${article.amount};${article.summary.replaceAll("\n", "<br>")}');
+          '${article.description};${article.pricePerUnit};${article.amount};${article.summary.replaceAll("\n", "<br>").replaceAll(";", ",")};${article.brutto}');
     }
     articleFile.writeAsStringSync(lines.join("\n"));
   }
