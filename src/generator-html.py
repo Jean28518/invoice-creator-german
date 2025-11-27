@@ -171,10 +171,10 @@ def main():
     # Generate invoice number from amount of .pdf files in the invoice folder Format: YYYY-MM-<number>
     # Get all files in the invoice directory
     files = os.listdir(invoice_dir)
-    # Check every file for .pdf
+    # Check every file for Rechnung*
     number = 1
     for file in files:
-        if file.endswith(".pdf"):
+        if file.startswith("Rechnung"):
             number += 1
     invoice_number = datetime.datetime.now().strftime("%Y-%m-") + str(number)
     if args.invoiceNumber != "":
@@ -383,8 +383,9 @@ def main():
         # Copy the default logo
         os.system(f"cp {current_dir}/html/logo.png {cache_dir}/logo.png")
 
-
-    print_path = f"{invoice_dir}/Rechnung-{invoice_number}.pdf"
+    print_path = f"{invoice_dir}/Rechnung-{invoice_number}"
+    os.makedirs(print_path)
+    print_path = f"{print_path}/Rechnung-{invoice_number}.pdf"
     if args.dryRun:
         print("Dry run. Not saving the pdf to the invoice Dir.")
         print_path = f"{cache_dir}/Rechnung.pdf"
